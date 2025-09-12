@@ -1,0 +1,97 @@
+{
+  "template": "app",
+  "imports": {
+    "Volo.Abp.LeptonXLiteTheme": {
+      "version": "4.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.Account": {
+      "version": "9.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.OpenIddict": {
+      "version": "9.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.Identity": {
+      "version": "9.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.SettingManagement": {
+      "version": "9.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.PermissionManagement": {
+      "version": "9.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.FeatureManagement": {
+      "version": "9.3.2",
+      "isInstalled": true
+    }
+  },
+  "folders": {
+    "items": {
+      "src": {},
+      "test": {}
+    }
+  },
+  "packages": {
+    "Bepixeplore.Application": {
+      "path": "src/Bepixeplore.Application/Bepixeplore.Application.abppkg",
+      "folder": "src"
+    },
+    "Bepixeplore.Application.Tests": {
+      "path": "test/Bepixeplore.Application.Tests/Bepixeplore.Application.Tests.abppkg",
+      "folder": "test"
+    },
+    "Bepixeplore.Domain.Shared": {
+      "path": "src/Bepixeplore.Domain.Shared/Bepixeplore.Domain.Shared.abppkg",
+      "folder": "src"
+    },
+    "Bepixeplore.Application.Contracts": {
+      "path": "src/Bepixeplore.Application.Contracts/Bepixeplore.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "Bepixeplore.HttpApi": {
+      "path": "src/Bepixeplore.HttpApi/Bepixeplore.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "Bepixeplore.HttpApi.Client": {
+      "path": "src/Bepixeplore.HttpApi.Client/Bepixeplore.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "Bepixeplore.EntityFrameworkCore.Tests": {
+      "path": "test/Bepixeplore.EntityFrameworkCore.Tests/Bepixeplore.EntityFrameworkCore.Tests.abppkg",
+      "folder": "test"
+    },
+    "Bepixeplore.EntityFrameworkCore": {
+      "path": "src/Bepixeplore.EntityFrameworkCore/Bepixeplore.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "Bepixeplore.TestBase": {
+      "path": "test/Bepixeplore.TestBase/Bepixeplore.TestBase.abppkg",
+      "folder": "test"
+    },
+    "Bepixeplore.Domain.Tests": {
+      "path": "test/Bepixeplore.Domain.Tests/Bepixeplore.Domain.Tests.abppkg",
+      "folder": "test"
+    },
+    "Bepixeplore.HttpApi.Client.ConsoleTestApp": {
+      "path": "test/Bepixeplore.HttpApi.Client.ConsoleTestApp/Bepixeplore.HttpApi.Client.ConsoleTestApp.abppkg",
+      "folder": "test"
+    },
+    "Bepixeplore.DbMigrator": {
+      "path": "src/Bepixeplore.DbMigrator/Bepixeplore.DbMigrator.abppkg",
+      "folder": "src"
+    },
+    "Bepixeplore.HttpApi.Host": {
+      "path": "src/Bepixeplore.HttpApi.Host/Bepixeplore.HttpApi.Host.abppkg",
+      "folder": "src"
+    },
+    "Bepixeplore.Domain": {
+      "path": "src/Bepixeplore.Domain/Bepixeplore.Domain.abppkg",
+      "folder": "src"
+    }
+  }
+}
