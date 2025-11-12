@@ -15,7 +15,7 @@ namespace Bepixplore.Destinations
         Guid,
         PagedAndSortedResultRequestDto,
         CreateUpdateDestinationDto>,
-    IDestinationAppService
+        IDestinationAppService
     {
         private readonly ICitySearchService _citySearchService;
         public DestinationAppService(IRepository<Destination, Guid> repository, ICitySearchService citySearchService)
