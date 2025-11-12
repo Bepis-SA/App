@@ -1,6 +1,7 @@
 using AutoMapper;
 using Bepixplore.Application.Contracts.Destinations;
 using Bepixplore.Destinations;
+using Bepixplore.Ratings;
 
 namespace Bepixplore;
 
@@ -16,5 +17,8 @@ public class BepixploreApplicationAutoMapperProfile : Profile
         CreateMap<CreateUpdateDestinationDto, Destination>();
         CreateMap<Coordinates, CoordinatesDto>();
         CreateMap<CoordinatesDto, Coordinates>();
+
+        CreateMap<Rating, RatingDto>();
+        CreateMap<CreateUpdateRatingDto, Rating>();
     }
 }

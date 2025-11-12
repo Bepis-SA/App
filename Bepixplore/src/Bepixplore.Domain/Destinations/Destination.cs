@@ -12,7 +12,7 @@ namespace Bepixplore.Destinations
         public uint Population { get; private set; }
         public string Photo { get; private set; }
         public DateTime UpdateDate { get; private set; }
-        public Coordinates Coordinates { get; private set; } // Coordenadas VO
+        public Coordinates Coordinates { get; private set; } // Coordinates VO
 
         private Destination() { } // EF Core
 
