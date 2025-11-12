@@ -1,5 +1,9 @@
 using Bepixplore.Destinations;
+using Bepixplore.Ratings;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using System;
+using System.Linq.Expressions;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
@@ -13,6 +17,7 @@ using Volo.Abp.Identity.EntityFrameworkCore;
 using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
+using Volo.Abp.Users;
 
 namespace Bepixplore.EntityFrameworkCore;
 
@@ -24,6 +29,7 @@ public class BepixploreDbContext :
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
     public DbSet<Destination> Destinations { get; set; }
+    public DbSet<Rating> Ratings { get; set; }
 
     #region Entities from the modules
 
@@ -55,6 +61,35 @@ public class BepixploreDbContext :
     {
     }
 
+    private ICurrentUser CurrentUser => LazyServiceProvider.LazyGetRequiredService<ICurrentUser>();
+    protected bool IsUserOwnedFilterEnabled => DataFilter?.IsEnabled<IUserOwned>() ?? false;
+    protected override bool ShouldFilterEntity<TEntity>(IMutableEntityType entityType)
+    {
+        if (typeof(IUserOwned).IsAssignableFrom(typeof(TEntity)))
+        {
+            return true;
+        }
+        return base.ShouldFilterEntity<TEntity>(entityType);
+    }
+
+    protected override Expression<Func<TEntity, bool>> CreateFilterExpression<TEntity>(ModelBuilder modelBuilder)
+    {
+        var expression = base.CreateFilterExpression<TEntity>(modelBuilder);
+
+        if (typeof(IUserOwned).IsAssignableFrom(typeof(TEntity)))
+        {
+            Expression<Func<TEntity, bool>> userOwnedFilter =
+                e => !IsUserOwnedFilterEnabled ||
+                     EF.Property<Guid>(e, nameof(IUserOwned.UserId)) == CurrentUser.Id.GetValueOrDefault();
+
+            expression = expression == null
+                ? userOwnedFilter
+                : QueryFilterExpressionHelper.CombineExpressions(expression, userOwnedFilter);
+        }
+
+        return expression;
+    }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -78,6 +113,7 @@ public class BepixploreDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+
         builder.Entity<Destination>(b =>
         {
             b.ToTable("Destinations");
@@ -88,12 +124,21 @@ public class BepixploreDbContext :
             b.Property(x => x.Population).IsRequired();
             b.Property(x => x.Photo).HasMaxLength(500);
             b.Property(x => x.UpdateDate).IsRequired();
-
             b.OwnsOne(d => d.Coordinates, co =>
             {
                 co.Property(c => c.Latitude).HasColumnName("Latitude").IsRequired().HasColumnType("float");
                 co.Property(c => c.Longitude).HasColumnName("Longitude").IsRequired().HasColumnType("float");
             });
+        });
+
+        builder.Entity<Rating>(b =>
+        {
+            b.ToTable("Ratings");
+            b.ConfigureByConvention();
+            b.Property(x => x.Score).IsRequired().HasMaxLength(5);
+            b.Property(x => x.Comment).HasMaxLength(500);
+            b.Property(x => x.DestinationId).IsRequired();
+            b.HasOne<Destination>().WithMany().HasForeignKey(x => x.DestinationId).OnDelete(DeleteBehavior.Restrict);
         });
     }
 }
