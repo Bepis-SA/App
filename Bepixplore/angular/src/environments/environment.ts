@@ -3,7 +3,7 @@ import { Environment } from '@abp/ng.core';
 const baseUrl = 'http://localhost:4200';
 
 const oAuthConfig = {
-  issuer: 'https://localhost:44366/',
+  issuer: 'https://localhost:44377/',
   redirectUri: baseUrl,
   clientId: 'Bepixplore_App',
   responseType: 'code',
@@ -20,7 +20,7 @@ export const environment = {
   oAuthConfig,
   apis: {
     default: {
-      url: 'https://localhost:44366',
+      url: 'https://localhost:44377',
       rootNamespace: 'Bepixplore',
     },
     AbpAccountPublic: {

@@ -1,0 +1,85 @@
+<div class="container-fluid py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10 col-xl-8">
+
+      <div class="card shadow-sm mb-5">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-20 d-flex align-items-center">
+            <i class="fas fa-search-location me-2"></i>
+            {{ '::CitySearch:Title' | abpLocalization }}
+          </h4>
+        </div>
+
+        <div class="card-body">
+          <!-- Input dentro de form -->
+          <form [formGroup]="searchForm" class="mb-5">
+            <input type="text" class="form-control form-control-lg rounded-pill shadow-sm text-center"
+              formControlName="query" placeholder="Escribe el nombre de una ciudad (ej: París, Tokio...)" />
+          </form>
+
+          <!-- Loading -->
+          <div class="text-center py-5" *ngIf="loading">
+            <i class="fas fa-spinner fa-spin fa-4x text-primary"></i>
+          </div>
+
+          <!-- Resultados en cards -->
+          <div class="row g-4" *ngIf="cities.length > 0">
+            <div class="col-md-6 col-lg-4" *ngFor="let city of cities">
+              <div class="card h-100 shadow-sm border-0 hover-lift position-relative overflow-hidden">
+                <!-- Pin central -->
+                <div class="position-absolute top-0 start-50 translate-middle-x mt-3 z-3">
+                  <div
+                    class="bg-dark text-white rounded-circle shadow-lg d-flex align-items-center justify-content-center"
+                    style="width: 48px; height: 48px;">
+                    <i class="fas fa-map-marker-alt fa-lg"></i>
+                  </div>
+                </div>
+
+                <div class="card-body pt-5 text-center">
+                  <h5 class="card-title fw-bold mb-4">{{ city.name }}</h5>
+
+                  <div class="text-muted small space-y-2">
+                    <div class="d-flex align-items-center justify-content-center gap-2">
+                      <i class="fas fa-globe-americas text-primary"></i>
+                      <span>País: {{ city.country }}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center gap-2" *ngIf="city.region">
+                      <i class="fas fa-map text-success"></i>
+                      <span>{{ city.region }}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center gap-2">
+                      <i class="fas fa-users text-info"></i>
+                      <span>Población: {{ city.population ? (city.population | number) : 'N/A' }}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center gap-2 text-truncate">
+                      <i class="fas fa-location-dot text-danger"></i>
+                      <small>{{ city.latitude | number:'1.4-4' }}, {{ city.longitude | number:'1.4-4' }}</small>
+                    </div>
+                  </div>
+
+                  <button class="btn btn-primary w-100 mt-4" (click)="selectCity(city)">
+                    <i class="fas fa-heart me-2"></i>
+                    Guardar ciudad
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sin resultados -->
+          <div class="text-center py-5" *ngIf="!loading && cities.length === 0 && queryControl.value?.length >= 2">
+            <i class="fas fa-city fa-5x text-muted mb-4 opacity-50"></i>
+            <h5 class="text-muted">No se encontraron ciudades</h5>
+          </div>
+
+          <!-- Estado inicial -->
+          <div class="text-center py-5 text-muted" *ngIf="!queryControl.value">
+            <i class="fas fa-search fa-4x mb-4 opacity-25"></i>
+            <p class="lead">Comienza escribiendo el nombre de una ciudad</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
