@@ -37,6 +37,12 @@
     "Unspecified": "Sistema",
     "SeeAllUsers": "Ver todos los usuarios",
     "TakePhoto": "Tomar foto",
-    "ChoosePhoto": "Escoge una foto"
+    "ChoosePhoto": "Escoge una foto",
+    "Menu:Cities": "Ciudades",
+    "CitySearch:Title": "Buscar ciudades",
+    "CitySearch:Placeholder": "Escribe el nombre de una ciudad...",
+    "CitySearch:Loading": "Buscando ciudades...",
+    "CitySearch:NoResults": "No se encontraron ciudades",
+    "CitySearch:Population": "hab."
   }
 }

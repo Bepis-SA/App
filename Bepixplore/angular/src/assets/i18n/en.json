@@ -1,0 +1,21 @@
+{
+  "Menu": {
+    "Home": "Home",
+    "Cities": "Tourist Destinations"
+  },
+  "Cites": {
+    "SearchQuery": "Search",
+    "SearchPlaceholder": "Search destinations...",
+    "Country": "Country",
+    "CountryPlaceholder": "Filter by country...",
+    "Population": "Population",
+    "Coordinates": "Coordinates",
+    "ViewOnMap": "View on map",
+    "NoResults": "No results found",
+    "NoResultsMessage": "Try modifying the search criteria or clear filters to see all destinations.",
+    "ShowAll": "Show all"
+  },
+  "Search": "Search",
+  "Clear": "Clear",
+  "Loading": "Loading..."
+}

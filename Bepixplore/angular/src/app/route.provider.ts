@@ -17,5 +17,12 @@ function configureRoutes() {
         order: 1,
         layout: eLayoutType.application,
       },
+      {
+        path: '/cities',
+        name: '::Menu:Cities',
+        iconClass: 'fas fa-search-location',
+        order: 2,
+        layout: eLayoutType.application,
+        },
   ]);
 }
