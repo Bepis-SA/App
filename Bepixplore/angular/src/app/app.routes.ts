@@ -24,4 +24,8 @@ export const APP_ROUTES: Routes = [
     loadChildren: () => import('./cities/cities.routes').then(m => m.CITIES_ROUTES),
     canActivate: [authGuard],
   },
+  {
+    path: 'destinations',
+    loadComponent: () => import('./destinations/destinations').then(m => m.Destinations),
+  },
 ];

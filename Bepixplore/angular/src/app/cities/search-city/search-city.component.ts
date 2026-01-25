@@ -33,11 +33,17 @@ export class SearchCityComponent implements OnInit, OnDestroy {
 
   searchForm = new FormGroup({
     query: new FormControl(''),
+    country: new FormControl(''), // <--- Pais
+    minPopulation: new FormControl<number | null>(null), // <--- Poblacion
   });
 
   get queryControl(): FormControl {
     return this.searchForm.get('query') as FormControl;
   }
+
+  // Agrego estos getters debajo de queryControl para que sea más fácil usarlos:
+  get countryControl(): FormControl { return this.searchForm.get('country') as FormControl; }
+  get minPopulationControl(): FormControl { return this.searchForm.get('minPopulation') as FormControl; }
 
   @Output() citySelected = new EventEmitter<CityDto>();
 
@@ -47,13 +53,13 @@ export class SearchCityComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
-    this.queryControl.valueChanges
+    this.searchForm.valueChanges // Escucha cambios en los 3 campos a la vez
       .pipe(
         takeUntil(this.destroy$),
         debounceTime(400),
-        distinctUntilChanged(),
-        switchMap(term => {
-          const query = (term ?? '').trim();
+        distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
+        switchMap(values => {
+          const query = (values.query ?? '').trim();
           this.loading = true;
           this.cities = [];
 
@@ -62,7 +68,13 @@ export class SearchCityComponent implements OnInit, OnDestroy {
             return of({ cities: [] } as CitySearchResultDto);
           }
 
-          const request: CitySearchRequestDto = { partialName: query };
+          // 3. ARMAMOS EL REQUEST CON LOS 3 FILTROS
+          const request: CitySearchRequestDto = {
+            partialName: query,
+            country: values.country || undefined,
+            minPopulation: values.minPopulation || undefined
+          };
+
           return this.destinationService.searchCities(request).pipe(
             catchError(err => {
               console.error('Error al buscar ciudades:', err);
@@ -81,6 +93,34 @@ export class SearchCityComponent implements OnInit, OnDestroy {
     this.citySelected.emit(city);
     this.searchForm.reset();
     this.cities = [];
+  }
+
+  saveCity(city: CityDto): void {
+    // 1. Preparamos el "molde" (DTO) con los datos de la ciudad
+    const input = {
+      name: city.name,
+      country: city.country,
+      city: city.name,
+      population: city.population || 0,
+      photo: '', // Podés dejarlo vacío o asignar una imagen por defecto
+      updateDate: new Date().toISOString(),
+      coordinates: {
+        latitude: city.latitude,
+        longitude: city.longitude
+      }
+    };
+
+    // 2. Llamamos al método create que ABP generó en el proxy
+    this.destinationService.create(input).subscribe({
+      next: () => {
+        // Usamos el alert por ahora, luego podés usar ToasterService de ABP
+        alert(`¡${city.name} se guardó correctamente en la base de datos!`);
+      },
+      error: (err) => {
+        console.error('Error al guardar:', err);
+        alert('Hubo un error al intentar guardar la ciudad.');
+      }
+    });
   }
 
   ngOnDestroy(): void {
