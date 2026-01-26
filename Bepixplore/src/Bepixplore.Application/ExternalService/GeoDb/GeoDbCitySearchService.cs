@@ -35,6 +35,15 @@ namespace Bepixplore.External.GeoDb
                 return result;
 
             var url = $"{_baseUrl}/cities?namePrefix={Uri.EscapeDataString(request.PartialName)}&limit=5";
+            if (!string.IsNullOrWhiteSpace(request.Country))
+            {
+                url += $"&countryIds={Uri.EscapeDataString(request.Country)}";
+            }
+            if (request.MinPopulation > 0)
+            {
+                url += $"&minPopulation={request.MinPopulation}";
+            }
+
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
             httpRequest.Headers.Add("X-RapidAPI-Key", _apiKey);
             httpRequest.Headers.Add("X-RapidAPI-Host", _host);
