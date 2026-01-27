@@ -43,7 +43,10 @@ namespace Bepixplore.External.GeoDb
             {
                 url += $"&minPopulation={request.MinPopulation}";
             }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
             httpRequest.Headers.Add("X-RapidAPI-Key", _apiKey);
             httpRequest.Headers.Add("X-RapidAPI-Host", _host);

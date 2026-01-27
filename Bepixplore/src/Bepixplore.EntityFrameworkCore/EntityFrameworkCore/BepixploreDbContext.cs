@@ -1,4 +1,6 @@
 using Bepixplore.Destinations;
+using Bepixplore.Experiences;
+using Bepixplore.Favorites;
 using Bepixplore.Ratings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -30,6 +32,9 @@ public class BepixploreDbContext :
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
     public DbSet<Destination> Destinations { get; set; }
     public DbSet<Rating> Ratings { get; set; }
+    public DbSet<Favorite> Favorites { get; set; }
+
+    public DbSet<TravelExperience> TravelExperiences { get; set; }
 
     #region Entities from the modules
 
@@ -139,6 +144,20 @@ public class BepixploreDbContext :
             b.Property(x => x.Comment).HasMaxLength(500);
             b.Property(x => x.DestinationId).IsRequired();
             b.HasOne<Destination>().WithMany().HasForeignKey(x => x.DestinationId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        builder.Entity<Favorite>(b =>
+        {
+            b.ToTable("Favorites"); // Nombre de la tabla
+            b.ConfigureByConvention(); // Configura las auditorías de ABP
+                                       // Índice único para evitar que un usuario agregue dos veces el mismo destino
+            b.HasIndex(x => new { x.UserId, x.DestinationId }).IsUnique();
+        });
+
+        builder.Entity<TravelExperience>(b => 
+        { 
+            b.ToTable("TravelExperiences"); 
+            b.ConfigureByConvention(); 
         });
     }
 }

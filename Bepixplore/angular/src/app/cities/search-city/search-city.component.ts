@@ -1,4 +1,5 @@
 // src/app/cities/search-city/search-city.component.ts
+import { FavoriteService } from '../../proxy/favorites/favorite.service';
 import { Component, OnInit, OnDestroy, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
@@ -30,6 +31,7 @@ import {
 
 export class SearchCityComponent implements OnInit, OnDestroy {
   private readonly destinationService = inject(DestinationService);
+  private readonly favoriteService = inject(FavoriteService);
 
   searchForm = new FormGroup({
     query: new FormControl(''),
@@ -96,13 +98,12 @@ export class SearchCityComponent implements OnInit, OnDestroy {
   }
 
   saveCity(city: CityDto): void {
-    // 1. Preparamos el "molde" (DTO) con los datos de la ciudad
     const input = {
       name: city.name,
       country: city.country,
       city: city.name,
       population: city.population || 0,
-      photo: '', // Podés dejarlo vacío o asignar una imagen por defecto
+      photo: '',
       updateDate: new Date().toISOString(),
       coordinates: {
         latitude: city.latitude,
@@ -110,15 +111,14 @@ export class SearchCityComponent implements OnInit, OnDestroy {
       }
     };
 
-    // 2. Llamamos al método create que ABP generó en el proxy
-    this.destinationService.create(input).subscribe({
+    // 2. CAMBIO CLAVE: Llamamos al FavoriteService en lugar de DestinationService
+    this.favoriteService.add(input).subscribe({
       next: () => {
-        // Usamos el alert por ahora, luego podés usar ToasterService de ABP
-        alert(`¡${city.name} se guardó correctamente en la base de datos!`);
+        alert(`¡${city.name} se guardó en tus destinos favoritos!`);
       },
       error: (err) => {
-        console.error('Error al guardar:', err);
-        alert('Hubo un error al intentar guardar la ciudad.');
+        console.error('Error al guardar en favoritos:', err);
+        alert('Hubo un error al intentar guardar en tus favoritos.');
       }
     });
   }

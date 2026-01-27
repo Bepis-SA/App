@@ -2,9 +2,8 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListService, CoreModule } from '@abp/ng.core';
 import { ThemeSharedModule } from '@abp/ng.theme.shared';
-
-// Importamos el servicio y el DTO usando las rutas que vimos en tus capturas
-import { DestinationService } from '../proxy/destinations/destination.service';
+import { map } from 'rxjs/operators';
+import { FavoriteService } from '../proxy/favorites/favorite.service'; // Usamos el nuevo servicio
 import { DestinationDto } from '../proxy/application/contracts/destinations/models';
 
 @Component({
@@ -17,25 +16,43 @@ import { DestinationDto } from '../proxy/application/contracts/destinations/mode
 })
 export class Destinations implements OnInit {
   public readonly list = inject(ListService);
-  private readonly destinationService = inject(DestinationService);
+  private readonly favoriteService = inject(FavoriteService);
 
   items: DestinationDto[] = [];
   totalCount = 0;
 
   ngOnInit() {
-    // Conectamos la tabla con los datos de SQL Server
-    const destinationStreamCreator = (query) => this.destinationService.getList(query);
+    // 1. Cambiamos el creador del stream para que use favoritos
+    const favoriteStreamCreator = (query) =>
+      this.favoriteService.getList().pipe(
+        // 2. Mapeamos el array simple a un objeto con 'items' y 'totalCount'
+        // para que hookToQuery siga funcionando perfecto
+        map((response) => ({
+          items: response,
+          totalCount: response.length
+        }))
+      );
 
-    this.list.hookToQuery(destinationStreamCreator).subscribe((response) => {
+    // 3. Enganchamos el servicio de lista de ABP
+    this.list.hookToQuery(favoriteStreamCreator).subscribe((response) => {
       this.items = response.items;
       this.totalCount = response.totalCount;
     });
   }
 
+  loadFavorites() {
+    this.favoriteService.getList().subscribe((response) => {
+      // Como el servicio devuelve List<DestinationDto>, lo asignamos directo
+      this.items = response;
+      this.totalCount = response.length;
+    });
+  }
+
   delete(id: string) {
-    if (confirm('¿Seguro que querés eliminar este destino de tus favoritos?')) {
-      this.destinationService.delete(id).subscribe(() => {
-        this.list.get(); // Recarga la lista automáticamente
+    if (confirm('¿Seguro que querés quitar este destino de tus favoritos?')) {
+      // 6.2: IMPORTANTE - Usamos 'remove' para quitar el vínculo, NO 'delete' del destino global
+      this.favoriteService.remove(id).subscribe(() => {
+        this.loadFavorites(); // Recarga la lista personal
       });
     }
   }

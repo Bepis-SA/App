@@ -2,6 +2,7 @@ using AutoMapper;
 using Bepixplore.Application.Contracts.Destinations;
 using Bepixplore.Destinations;
 using Bepixplore.Ratings;
+using Bepixplore.Experiences;
 
 namespace Bepixplore;
 
@@ -17,8 +18,11 @@ public class BepixploreApplicationAutoMapperProfile : Profile
         CreateMap<CreateUpdateDestinationDto, Destination>();
         CreateMap<Coordinates, CoordinatesDto>();
         CreateMap<CoordinatesDto, Coordinates>();
+        CreateMap<TravelExperience, TravelExperienceDto>();
+        CreateMap<CreateUpdateTravelExperienceDto, TravelExperience>();
 
         CreateMap<Rating, RatingDto>();
         CreateMap<CreateUpdateRatingDto, Rating>();
+        CreateMap<TravelExperienceDto, TravelExperience>();
     }
 }
