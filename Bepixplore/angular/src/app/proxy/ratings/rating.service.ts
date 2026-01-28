@@ -45,6 +45,14 @@ export class RatingService {
     { apiName: this.apiName,...config });
   
 
+  getListByDestination = (destinationId: string, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, RatingDto[]>({
+      method: 'GET',
+      url: `/api/app/rating/by-destination/${destinationId}`,
+    },
+    { apiName: this.apiName,...config });
+  
+
   update = (id: string, input: CreateUpdateRatingDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, RatingDto>({
       method: 'PUT',

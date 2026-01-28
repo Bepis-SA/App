@@ -7,6 +7,7 @@ import { CoreModule } from '@abp/ng.core';
 import { DestinationService } from '../../proxy/destinations/destination.service';
 import { CityDto } from '../../proxy/application/contracts/cities/models';
 import { CitySearchRequestDto, CitySearchResultDto } from '../../proxy/cities/models';
+import { Router } from '@angular/router';
 import { Subject, of } from 'rxjs';
 import {
   debounceTime,
@@ -32,6 +33,7 @@ import {
 export class SearchCityComponent implements OnInit, OnDestroy {
   private readonly destinationService = inject(DestinationService);
   private readonly favoriteService = inject(FavoriteService);
+  private readonly router = inject(Router);
 
   searchForm = new FormGroup({
     query: new FormControl(''),
@@ -111,7 +113,6 @@ export class SearchCityComponent implements OnInit, OnDestroy {
       }
     };
 
-    // 2. CAMBIO CLAVE: Llamamos al FavoriteService en lugar de DestinationService
     this.favoriteService.add(input).subscribe({
       next: () => {
         alert(`¡${city.name} se guardó en tus destinos favoritos!`);
@@ -119,6 +120,28 @@ export class SearchCityComponent implements OnInit, OnDestroy {
       error: (err) => {
         console.error('Error al guardar en favoritos:', err);
         alert('Hubo un error al intentar guardar en tus favoritos.');
+      }
+    });
+  }
+
+  viewDetails(city: any) {
+    const cityInput = {
+      name: city.name,
+      country: city.country,
+      city: city.name,
+      population: city.population || 0,
+      photo: '',
+      updateDate: new Date().toISOString(),
+      coordinates: { latitude: city.latitude, longitude: city.longitude }
+    };
+
+    this.destinationService.create(cityInput as any).subscribe({
+      next: (res: any) => {
+        this.router.navigate(['/destinations/details'], { state: { data: res } });
+      },
+      error: (err) => {
+        console.error('Error al preparar el destino:', err);
+        this.router.navigate(['/destinations/details'], { state: { data: city } });
       }
     });
   }

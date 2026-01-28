@@ -1,16 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\Bepixplore",
-    "\\Bepixplore\\angular",
-    "\\Bepixplore\\angular\\src",
-    "\\Bepixplore\\angular\\src\\app",
-    "\\Bepixplore\\angular\\src\\app\\experiences",
-    "\\Bepixplore\\angular\\src\\app\\experiences\\travel-experience",
-    "\\Bepixplore\\angular\\src\\app\\proxy",
-    "\\Bepixplore\\src",
-    "\\Bepixplore\\src\\Bepixplore.Application"
+    ""
   ],
-  "SelectedNode": "\\Bepixplore\\angular\\src\\app\\experiences\\travel-experience\\travel-experience.ts",
+  "SelectedNode": "\\Bepixplore.sln",
   "PreviewInSolutionExplorer": false
 }

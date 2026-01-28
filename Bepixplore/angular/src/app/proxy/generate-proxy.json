@@ -1300,10 +1300,10 @@
                   "name": "GetListAsync",
                   "parametersOnMethod": [
                     {
-                      "name": "keyword",
-                      "typeAsString": "System.String, System.Private.CoreLib",
-                      "type": "System.String",
-                      "typeSimple": "string",
+                      "name": "input",
+                      "typeAsString": "Bepixplore.Experiences.GetTravelExperienceListDto, Bepixplore.Application.Contracts",
+                      "type": "Bepixplore.Experiences.GetTravelExperienceListDto",
+                      "typeSimple": "Bepixplore.Experiences.GetTravelExperienceListDto",
                       "isOptional": false,
                       "defaultValue": null
                     }
@@ -1311,6 +1311,31 @@
                   "returnValue": {
                     "type": "System.Collections.Generic.List<Bepixplore.Experiences.TravelExperienceDto>",
                     "typeSimple": "[Bepixplore.Experiences.TravelExperienceDto]"
+                  }
+                },
+                {
+                  "name": "UpdateAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "input",
+                      "typeAsString": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto, Bepixplore.Application.Contracts",
+                      "type": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
+                      "typeSimple": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Bepixplore.Experiences.TravelExperienceDto",
+                    "typeSimple": "Bepixplore.Experiences.TravelExperienceDto"
                   }
                 },
                 {
@@ -1371,26 +1396,38 @@
               "allowAnonymous": null,
               "implementFrom": "Bepixplore.Experiences.ITravelExperienceAppService"
             },
-            "GetListAsyncByKeyword": {
-              "uniqueName": "GetListAsyncByKeyword",
+            "GetListAsyncByInput": {
+              "uniqueName": "GetListAsyncByInput",
               "name": "GetListAsync",
               "httpMethod": "GET",
               "url": "api/app/travel-experience",
               "supportedVersions": [],
               "parametersOnMethod": [
                 {
-                  "name": "keyword",
-                  "typeAsString": "System.String, System.Private.CoreLib",
-                  "type": "System.String",
-                  "typeSimple": "string",
+                  "name": "input",
+                  "typeAsString": "Bepixplore.Experiences.GetTravelExperienceListDto, Bepixplore.Application.Contracts",
+                  "type": "Bepixplore.Experiences.GetTravelExperienceListDto",
+                  "typeSimple": "Bepixplore.Experiences.GetTravelExperienceListDto",
                   "isOptional": false,
                   "defaultValue": null
                 }
               ],
               "parameters": [
                 {
-                  "nameOnMethod": "keyword",
-                  "name": "keyword",
+                  "nameOnMethod": "input",
+                  "name": "DestinationId",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "Keyword",
                   "jsonName": null,
                   "type": "System.String",
                   "typeSimple": "string",
@@ -1398,7 +1435,55 @@
                   "defaultValue": null,
                   "constraintTypes": null,
                   "bindingSourceId": "ModelBinding",
-                  "descriptorName": ""
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "Rating",
+                  "jsonName": null,
+                  "type": "System.Int32?",
+                  "typeSimple": "number?",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "Sorting",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "SkipCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "MaxResultCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
                 }
               ],
               "returnValue": {
@@ -1441,6 +1526,63 @@
               "returnValue": {
                 "type": "System.Void",
                 "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Bepixplore.Experiences.ITravelExperienceAppService"
+            },
+            "UpdateAsyncByIdAndInput": {
+              "uniqueName": "UpdateAsyncByIdAndInput",
+              "name": "UpdateAsync",
+              "httpMethod": "PUT",
+              "url": "api/app/travel-experience/{id}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "input",
+                  "typeAsString": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto, Bepixplore.Application.Contracts",
+                  "type": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
+                  "typeSimple": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
+                  "typeSimple": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Bepixplore.Experiences.TravelExperienceDto",
+                "typeSimple": "Bepixplore.Experiences.TravelExperienceDto"
               },
               "allowAnonymous": null,
               "implementFrom": "Bepixplore.Experiences.ITravelExperienceAppService"
@@ -1609,6 +1751,23 @@
               "name": "IRatingAppService",
               "methods": [
                 {
+                  "name": "GetListByDestinationAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "destinationId",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Collections.Generic.List<Bepixplore.Ratings.RatingDto>",
+                    "typeSimple": "[Bepixplore.Ratings.RatingDto]"
+                  }
+                },
+                {
                   "name": "GetAsync",
                   "parametersOnMethod": [
                     {
@@ -1765,6 +1924,43 @@
               },
               "allowAnonymous": false,
               "implementFrom": "Volo.Abp.Application.Services.ICreateAppService<Bepixplore.Ratings.RatingDto,Bepixplore.Ratings.CreateUpdateRatingDto>"
+            },
+            "GetListByDestinationAsyncByDestinationId": {
+              "uniqueName": "GetListByDestinationAsyncByDestinationId",
+              "name": "GetListByDestinationAsync",
+              "httpMethod": "GET",
+              "url": "api/app/rating/by-destination/{destinationId}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "destinationId",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "destinationId",
+                  "name": "destinationId",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Collections.Generic.List<Bepixplore.Ratings.RatingDto>",
+                "typeSimple": "[Bepixplore.Ratings.RatingDto]"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "Bepixplore.Ratings.IRatingAppService"
             },
             "UpdateAsyncByIdAndInput": {
               "uniqueName": "UpdateAsyncByIdAndInput",
@@ -4593,6 +4789,51 @@
           "jsonName": null,
           "type": "System.DateTime",
           "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "Bepixplore.Experiences.GetTravelExperienceListDto": {
+      "baseType": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "DestinationId",
+          "jsonName": null,
+          "type": "System.Guid",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Keyword",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Rating",
+          "jsonName": null,
+          "type": "System.Int32?",
+          "typeSimple": "number?",
           "isRequired": false,
           "minLength": null,
           "maxLength": null,

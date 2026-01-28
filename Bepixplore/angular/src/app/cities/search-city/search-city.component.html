@@ -71,10 +71,15 @@
                     </div>
                   </div>
 
-                  <button class="btn btn-primary w-100 mt-4" (click)="saveCity(city)">
-                    <i class="fas fa-heart me-2"></i>
-                    Guardar ciudad
-                  </button>
+                  <div class="card-footer border-0 bg-white">
+                    <button class="btn btn-primary w-100 mb-2 rounded-pill" (click)="saveCity(city)">
+                      <i class="fa fa-heart me-1"></i> Guardar ciudad
+                    </button>
+
+                    <button class="btn btn-outline-dark w-100 rounded-pill" (click)="viewDetails(city)">
+                      <i class="fa fa-info-circle me-1"></i> Ver detalles
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

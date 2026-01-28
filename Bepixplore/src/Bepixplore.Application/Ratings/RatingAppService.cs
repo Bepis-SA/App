@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Authorization;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.ObjectMapping;
 using Volo.Abp.Users;
 
 namespace Bepixplore.Ratings
@@ -50,5 +52,13 @@ namespace Bepixplore.Ratings
             await Repository.InsertAsync(entity);
             return ObjectMapper.Map<Rating, RatingDto>(entity);
         }
+
+        public async Task<List<RatingDto>> GetListByDestinationAsync(Guid destinationId)
+        {
+            var ratings = await Repository.GetListAsync(r => r.DestinationId == destinationId);
+
+            return ObjectMapper.Map<List<Rating>, List<RatingDto>>(ratings);
+        }
     }
+
 }

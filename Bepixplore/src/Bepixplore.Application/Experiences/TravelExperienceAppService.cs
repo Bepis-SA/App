@@ -33,17 +33,32 @@ namespace Bepixplore.Experiences
         }
 
         // 4.6: Implementación del buscador por descripción
-        public async Task<List<TravelExperienceDto>> GetListAsync(string keyword)
+        public async Task<List<TravelExperienceDto>> GetListAsync(GetTravelExperienceListDto input)
         {
             var queryable = await _repository.GetQueryableAsync();
 
-            var experiences = queryable
-                .WhereIf(!string.IsNullOrWhiteSpace(keyword), x => x.Description.Contains(keyword))
-                .ToList();
+            var query = queryable
+                .Where(x => x.DestinationId == input.DestinationId)
+                // Filtra por palabra clave si existe
+                .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.Description.Contains(input.Keyword))
+                // Opción recomendada: Convertir el número al tipo del Enum
+                .WhereIf(input.Rating.HasValue, x => x.Rating == (TravelRating)input.Rating.Value);
 
+            var experiences = await AsyncExecuter.ToListAsync(query);
             return ObjectMapper.Map<List<TravelExperience>, List<TravelExperienceDto>>(experiences);
         }
 
         public async Task DeleteAsync(Guid id) => await _repository.DeleteAsync(id);
+
+        public async Task<TravelExperienceDto> UpdateAsync(Guid id, CreateUpdateTravelExperienceDto input)
+        {
+            var experience = await _repository.GetAsync(id);
+
+            experience.Description = input.Description;
+            experience.Rating = input.Rating;
+
+            await _repository.UpdateAsync(experience);
+            return ObjectMapper.Map<TravelExperience, TravelExperienceDto>(experience);
+        }
     }
 }

@@ -1,4 +1,4 @@
-import type { CreateUpdateTravelExperienceDto, TravelExperienceDto } from './models';
+import type { CreateUpdateTravelExperienceDto, GetTravelExperienceListDto, TravelExperienceDto } from './models';
 import { RestService, Rest } from '@abp/ng.core';
 import { Injectable, inject } from '@angular/core';
 
@@ -27,11 +27,20 @@ export class TravelExperienceService {
     { apiName: this.apiName,...config });
   
 
-  getList = (keyword: string, config?: Partial<Rest.Config>) =>
+  getList = (input: GetTravelExperienceListDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, TravelExperienceDto[]>({
       method: 'GET',
       url: '/api/app/travel-experience',
-      params: { keyword },
+      params: { destinationId: input.destinationId, keyword: input.keyword, rating: input.rating, sorting: input.sorting, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
+    },
+    { apiName: this.apiName,...config });
+  
+
+  update = (id: string, input: CreateUpdateTravelExperienceDto, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, TravelExperienceDto>({
+      method: 'PUT',
+      url: `/api/app/travel-experience/${id}`,
+      body: input,
     },
     { apiName: this.apiName,...config });
 }
