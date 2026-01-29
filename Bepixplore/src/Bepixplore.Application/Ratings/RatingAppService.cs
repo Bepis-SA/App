@@ -7,8 +7,9 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Authorization;
 using Volo.Abp.Domain.Repositories;
-using Volo.Abp.ObjectMapping;
 using Volo.Abp.Users;
+using System.Linq;
+using Volo.Abp.Data;
 
 namespace Bepixplore.Ratings
 {
@@ -23,11 +24,15 @@ namespace Bepixplore.Ratings
             IRatingAppService
     {
         private readonly ICurrentUser _currentUser;
+        private readonly IDataFilter _dataFilter;
 
-        public RatingAppService(IRepository<Rating, Guid> repository, ICurrentUser currentUser)
-            : base(repository)
+        public RatingAppService(
+        IRepository<Rating, Guid> repository,
+        ICurrentUser currentUser,
+        IDataFilter dataFilter) : base(repository)
         {
             _currentUser = currentUser;
+            _dataFilter = dataFilter;
         }
 
         public override async Task<RatingDto> CreateAsync(CreateUpdateRatingDto input)
@@ -55,9 +60,15 @@ namespace Bepixplore.Ratings
 
         public async Task<List<RatingDto>> GetListByDestinationAsync(Guid destinationId)
         {
-            var ratings = await Repository.GetListAsync(r => r.DestinationId == destinationId);
+            using (_dataFilter.Disable<IUserOwned>())
+            {
+                var queryable = await Repository.GetQueryableAsync();
 
-            return ObjectMapper.Map<List<Rating>, List<RatingDto>>(ratings);
+                var query = queryable.Where(x => x.DestinationId == destinationId);
+
+                var ratings = await AsyncExecuter.ToListAsync(query);
+                return ObjectMapper.Map<List<Rating>, List<RatingDto>>(ratings);
+            }
         }
     }
 

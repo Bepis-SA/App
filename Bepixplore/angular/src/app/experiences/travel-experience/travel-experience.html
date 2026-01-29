@@ -62,7 +62,7 @@
 
             <div class="text-end">
               <small class="text-muted d-block mb-1">{{ exp.travelDate | date:'mediumDate' }}</small>
-              <div class="btn-group">
+              <div *ngIf="exp.userId === currentUserId" class="btn-group">
                 <button class="btn btn-sm btn-outline-primary border-0" (click)="prepareEdit(exp)" title="Editar">
                   <i class="fa fa-pencil"></i>
                 </button>

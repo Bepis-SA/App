@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Authorization;
+using Volo.Abp.Data;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Modularity;
 using Volo.Abp.Users;
@@ -19,12 +20,14 @@ namespace Bepixplore.Application.Tests.Ratings
         protected readonly IRatingAppService _ratingAppService;
         protected readonly IRepository<Rating, Guid> _ratingRepository;
         protected readonly ICurrentUser _currentUser;
+        private readonly IDataFilter _dataFilter;
 
         protected RatingAppService_Tests()
         {
             _ratingAppService = GetRequiredService<IRatingAppService>();
             _ratingRepository = GetRequiredService<IRepository<Rating, Guid>>();
             _currentUser = GetRequiredService<ICurrentUser>();
+            _dataFilter = GetRequiredService<IDataFilter>();
         }
 
         [Fact]
@@ -81,8 +84,14 @@ namespace Bepixplore.Application.Tests.Ratings
             // Arrange
             var currentUserMock = Substitute.For<ICurrentUser>();
             currentUserMock.IsAuthenticated.Returns(false);
+
             var repositoryMock = Substitute.For<IRepository<Rating, Guid>>();
-            var service = new RatingAppService(repositoryMock, currentUserMock);
+
+            // 1. CREAMOS EL MOCK QUE FALTA
+            var dataFilterMock = Substitute.For<Volo.Abp.Data.IDataFilter>();
+
+            // 2. SE LO PASAMOS COMO TERCER ARGUMENTO
+            var service = new RatingAppService(repositoryMock, currentUserMock, dataFilterMock);
 
             // Act & Assert
             await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>

@@ -2,6 +2,7 @@ import { Component, OnInit, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ConfigStateService } from '@abp/ng.core';
 
 import { DestinationService } from '../../proxy/destinations/destination.service';
 import { TravelExperienceService } from '../../proxy/experiences/travel-experience.service';
@@ -27,16 +28,16 @@ export class TravelExperienceComponent implements OnInit {
   @Input() destinationId: string;
 
   private readonly destinationService = inject(DestinationService);
-  private readonly experienceService = inject(TravelExperienceService);
   readonly router = inject(Router);
 
-  isEditing = false; // Estado para saber si estamos editando
+  isEditing = false;
   editingId: string | null = null;
 
   city: any;
   experiences: TravelExperienceDto[] = [];
   keyword: string = '';
-  selectedRating: number | null = null; // null significa "Todas"
+  selectedRating: number | null = null;
+  currentUserId: string | undefined;
 
   newReview: Partial<CreateUpdateTravelExperienceDto> = {
     rating: 1,
@@ -44,11 +45,16 @@ export class TravelExperienceComponent implements OnInit {
     travelDate: new Date().toISOString()
   };
 
+  constructor(
+    private experienceService: TravelExperienceService,
+    private configState: ConfigStateService
+  ) {
+    this.currentUserId = this.configState.getDeep('currentUser.id');
+  }
+
   ngOnInit(): void {
-    // Intentamos obtener la ciudad del historial, pero priorizamos el Input
     this.city = history.state.data;
 
-    // Si viene el ID del padre o del historial, cargamos
     if (this.destinationId || (this.city && (this.city.id || this.city.destinationId))) {
       this.getExperiences();
     }
@@ -58,7 +64,7 @@ export class TravelExperienceComponent implements OnInit {
     if (confirm('¿Seguro que querés borrar esta historia?')) {
       this.experienceService.delete(id).subscribe(() => {
         alert('Eliminado con éxito');
-        this.getExperiences(); // Recargamos la lista
+        this.getExperiences();
       });
     }
   }
@@ -66,11 +72,10 @@ export class TravelExperienceComponent implements OnInit {
   prepareEdit(exp: any) {
     this.isEditing = true;
     this.editingId = exp.id;
-    // Llenamos el formulario con lo que ya existe
     this.newReview = {
       description: exp.description,
       rating: exp.rating,
-      travelDate: exp.travelDate // Se envía, pero el backend lo ignorará según tu regla
+      travelDate: exp.travelDate
     };
   }
 
@@ -78,18 +83,17 @@ export class TravelExperienceComponent implements OnInit {
     const cityId = this.destinationId || this.city?.id || this.city?.destinationId;
     if (!cityId) return;
 
-    // Agregamos los valores de paginación aquí
     const input: GetTravelExperienceListDto = {
       destinationId: cityId,
       keyword: this.keyword || '',
       rating: this.selectedRating,
-      maxResultCount: 10, // Traemos las primeras 10 reseñas
-      skipCount: 0        // Empezamos desde la primera
+      maxResultCount: 10,
+      skipCount: 0        
     };
 
     this.experienceService.getList(input).subscribe({
-      next: (data) => {
-        this.experiences = data;
+      next: (data: any) => {
+        this.experiences = data.items;
       },
       error: (err) => console.error('Error:', err)
     });

@@ -15,14 +15,12 @@ export class FavoritesComponent implements OnInit {
     this.loadFavorites();
   }
 
-  // 6.3: Consultar lista personal desde el backend
   loadFavorites() {
     this.favoriteService.getList().subscribe(data => {
       this.favorites = data;
     });
   }
 
-  // 6.2: Eliminar de favoritos y refrescar
   remove(id: string) {
     this.favoriteService.remove(id).subscribe(() => this.loadFavorites());
   }

@@ -1,5 +1,6 @@
 import type { CreateUpdateTravelExperienceDto, GetTravelExperienceListDto, TravelExperienceDto } from './models';
 import { RestService, Rest } from '@abp/ng.core';
+import type { PagedResultDto } from '@abp/ng.core';
 import { Injectable, inject } from '@angular/core';
 
 @Injectable({
@@ -27,8 +28,16 @@ export class TravelExperienceService {
     { apiName: this.apiName,...config });
   
 
+  get = (id: string, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, TravelExperienceDto>({
+      method: 'GET',
+      url: `/api/app/travel-experience/${id}`,
+    },
+    { apiName: this.apiName,...config });
+  
+
   getList = (input: GetTravelExperienceListDto, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, TravelExperienceDto[]>({
+    this.restService.request<any, PagedResultDto<TravelExperienceDto>>({
       method: 'GET',
       url: '/api/app/travel-experience',
       params: { destinationId: input.destinationId, keyword: input.keyword, rating: input.rating, sorting: input.sorting, skipCount: input.skipCount, maxResultCount: input.maxResultCount },

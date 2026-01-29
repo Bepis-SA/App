@@ -19,4 +19,5 @@ export interface TravelExperienceDto extends EntityDto<string> {
   rating?: TravelRating;
   description?: string;
   travelDate?: string;
+  userId?: string;
 }

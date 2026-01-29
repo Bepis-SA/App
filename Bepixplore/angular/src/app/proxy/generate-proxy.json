@@ -1309,8 +1309,8 @@
                     }
                   ],
                   "returnValue": {
-                    "type": "System.Collections.Generic.List<Bepixplore.Experiences.TravelExperienceDto>",
-                    "typeSimple": "[Bepixplore.Experiences.TravelExperienceDto]"
+                    "type": "Volo.Abp.Application.Dtos.PagedResultDto<Bepixplore.Experiences.TravelExperienceDto>",
+                    "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Bepixplore.Experiences.TravelExperienceDto>"
                   }
                 },
                 {
@@ -1359,43 +1359,6 @@
             }
           ],
           "actions": {
-            "CreateAsyncByInput": {
-              "uniqueName": "CreateAsyncByInput",
-              "name": "CreateAsync",
-              "httpMethod": "POST",
-              "url": "api/app/travel-experience",
-              "supportedVersions": [],
-              "parametersOnMethod": [
-                {
-                  "name": "input",
-                  "typeAsString": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto, Bepixplore.Application.Contracts",
-                  "type": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
-                  "typeSimple": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
-                  "isOptional": false,
-                  "defaultValue": null
-                }
-              ],
-              "parameters": [
-                {
-                  "nameOnMethod": "input",
-                  "name": "input",
-                  "jsonName": null,
-                  "type": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
-                  "typeSimple": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "Body",
-                  "descriptorName": ""
-                }
-              ],
-              "returnValue": {
-                "type": "Bepixplore.Experiences.TravelExperienceDto",
-                "typeSimple": "Bepixplore.Experiences.TravelExperienceDto"
-              },
-              "allowAnonymous": null,
-              "implementFrom": "Bepixplore.Experiences.ITravelExperienceAppService"
-            },
             "GetListAsyncByInput": {
               "uniqueName": "GetListAsyncByInput",
               "name": "GetListAsync",
@@ -1487,11 +1450,11 @@
                 }
               ],
               "returnValue": {
-                "type": "System.Collections.Generic.List<Bepixplore.Experiences.TravelExperienceDto>",
-                "typeSimple": "[Bepixplore.Experiences.TravelExperienceDto]"
+                "type": "Volo.Abp.Application.Dtos.PagedResultDto<Bepixplore.Experiences.TravelExperienceDto>",
+                "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Bepixplore.Experiences.TravelExperienceDto>"
               },
               "allowAnonymous": null,
-              "implementFrom": "Bepixplore.Experiences.ITravelExperienceAppService"
+              "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<Bepixplore.Experiences.TravelExperienceDto,Bepixplore.Experiences.TravelExperienceDto,System.Guid,Bepixplore.Experiences.GetTravelExperienceListDto>"
             },
             "DeleteAsyncById": {
               "uniqueName": "DeleteAsyncById",
@@ -1528,7 +1491,7 @@
                 "typeSimple": "System.Void"
               },
               "allowAnonymous": null,
-              "implementFrom": "Bepixplore.Experiences.ITravelExperienceAppService"
+              "implementFrom": "Volo.Abp.Application.Services.IDeleteAppService<System.Guid>"
             },
             "UpdateAsyncByIdAndInput": {
               "uniqueName": "UpdateAsyncByIdAndInput",
@@ -1585,7 +1548,81 @@
                 "typeSimple": "Bepixplore.Experiences.TravelExperienceDto"
               },
               "allowAnonymous": null,
-              "implementFrom": "Bepixplore.Experiences.ITravelExperienceAppService"
+              "implementFrom": "Volo.Abp.Application.Services.IUpdateAppService<Bepixplore.Experiences.TravelExperienceDto,System.Guid,Bepixplore.Experiences.CreateUpdateTravelExperienceDto>"
+            },
+            "CreateAsyncByInput": {
+              "uniqueName": "CreateAsyncByInput",
+              "name": "CreateAsync",
+              "httpMethod": "POST",
+              "url": "api/app/travel-experience",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto, Bepixplore.Application.Contracts",
+                  "type": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
+                  "typeSimple": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
+                  "typeSimple": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Bepixplore.Experiences.TravelExperienceDto",
+                "typeSimple": "Bepixplore.Experiences.TravelExperienceDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.ICreateAppService<Bepixplore.Experiences.TravelExperienceDto,Bepixplore.Experiences.CreateUpdateTravelExperienceDto>"
+            },
+            "GetAsyncById": {
+              "uniqueName": "GetAsyncById",
+              "name": "GetAsync",
+              "httpMethod": "GET",
+              "url": "api/app/travel-experience/{id}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Bepixplore.Experiences.TravelExperienceDto",
+                "typeSimple": "Bepixplore.Experiences.TravelExperienceDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<Bepixplore.Experiences.TravelExperienceDto,Bepixplore.Experiences.TravelExperienceDto,System.Guid,Bepixplore.Experiences.GetTravelExperienceListDto>"
             }
           }
         },
@@ -4890,6 +4927,18 @@
           "name": "TravelDate",
           "jsonName": null,
           "type": "System.DateTime",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "UserId",
+          "jsonName": null,
+          "type": "System.Guid",
           "typeSimple": "string",
           "isRequired": false,
           "minLength": null,

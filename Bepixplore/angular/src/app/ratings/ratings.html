@@ -17,7 +17,7 @@
   <div class="row">
     <div class="col-lg-5 mb-4">
       <div class="card border-0 shadow-sm rounded-4 p-4 border-start border-warning border-4">
-        <h4 class="fw-bold mb-3">Deja tu puntuación</h4>
+        <h4 class="fw-bold mb-3">{{ isEditing ? 'Editar tu puntuación' : 'Deja tu puntuación' }}</h4>
 
         <div class="mb-4 text-center">
           <div class="star-selector fs-1">
@@ -37,10 +37,17 @@
                     [(ngModel)]="newRating.comment"></textarea>
         </div>
 
-        <button class="btn btn-warning w-100 py-2 fw-bold rounded-pill shadow-sm"
+        <button class="btn w-100 py-2 fw-bold rounded-pill shadow-sm"
+                [ngClass]="isEditing ? 'btn-info text-white' : 'btn-warning'"
                 [disabled]="newRating.score === 0"
                 (click)="submitRating()">
-          Guardar Calificación
+          {{ isEditing ? 'Actualizar Cambios' : 'Guardar Calificación' }}
+        </button>
+
+        <button *ngIf="isEditing"
+                class="btn btn-link btn-sm w-100 mt-2 text-secondary"
+                (click)="resetForm()">
+          Cancelar edición
         </button>
       </div>
     </div>
@@ -61,11 +68,16 @@
                  [ngClass]="s <= rat.score ? 'fa-star' : 'fa-star-o'"></i>
             </div>
 
-            <button *ngIf="rat.userId === currentUserId"
-                    class="btn btn-sm btn-outline-danger border-0"
-                    (click)="deleteRating(rat.id)">
-              <i class="fa fa-trash"></i>
-            </button>
+            <div *ngIf="rat.userId === currentUserId" class="btn-group">
+              <button class="btn btn-sm btn-outline-primary border-0"
+                      (click)="prepareEdit(rat)" title="Editar">
+                <i class="fa fa-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger border-0"
+                      (click)="deleteRating(rat.id)" title="Eliminar">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
           </div>
           <p class="card-text fs-5 mb-0">"{{ rat.comment || 'Sin comentario' }}"</p>
         </div>

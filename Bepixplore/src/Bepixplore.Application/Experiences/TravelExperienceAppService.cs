@@ -1,63 +1,86 @@
-﻿using System;
+﻿using Bepixplore.Ratings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Volo.Abp;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Data;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Users;
 
 namespace Bepixplore.Experiences
 {
-    public class TravelExperienceAppService : ApplicationService, ITravelExperienceAppService
+    public class TravelExperienceAppService :
+    CrudAppService<
+        TravelExperience,
+        TravelExperienceDto,
+        Guid,
+        GetTravelExperienceListDto,
+        CreateUpdateTravelExperienceDto>,
+        ITravelExperienceAppService
     {
-        private readonly IRepository<TravelExperience, Guid> _repository;
+        private readonly ICurrentUser _currentUser;
+        private readonly IDataFilter _dataFilter;
 
-        public TravelExperienceAppService(IRepository<TravelExperience, Guid> repository)
+        public TravelExperienceAppService(
+            IRepository<TravelExperience, Guid> repository,
+            ICurrentUser currentUser,
+            IDataFilter dataFilter) : base(repository)
         {
-            _repository = repository;
+            _currentUser = currentUser;
+            _dataFilter = dataFilter;
         }
 
-        public async Task<TravelExperienceDto> CreateAsync(CreateUpdateTravelExperienceDto input)
+        public override async Task<PagedResultDto<TravelExperienceDto>> GetListAsync(GetTravelExperienceListDto input)
         {
-            var experience = new TravelExperience(
-                GuidGenerator.Create(),
-                input.DestinationId,
-                CurrentUser.GetId(),
-                input.Rating,
-                input.Description,
-                input.TravelDate
-            );
+            using (_dataFilter.Disable<IUserOwned>())
+            {
+                var queryable = await Repository.GetQueryableAsync();
 
-            await _repository.InsertAsync(experience);
-            return ObjectMapper.Map<TravelExperience, TravelExperienceDto>(experience);
+                var query = queryable
+                    .Where(x => x.DestinationId == input.DestinationId)
+                    .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.Description.Contains(input.Keyword))
+                    .WhereIf(input.Rating.HasValue, x => x.Rating == (TravelRating)input.Rating.Value);
+
+                // Obtenemos el total para la paginación
+                var totalCount = await AsyncExecuter.CountAsync(query);
+
+                // Obtenemos la lista de datos
+                var experiences = await AsyncExecuter.ToListAsync(query);
+
+                // 2. Mapeamos la lista
+                var dtos = ObjectMapper.Map<List<TravelExperience>, List<TravelExperienceDto>>(experiences);
+
+                // 3. Devolvemos el objeto que Swagger espera para no tirar error 500
+                return new PagedResultDto<TravelExperienceDto>(totalCount, dtos);
+            }
+        }
+        public override async Task DeleteAsync(Guid id)
+        {
+            var experience = await Repository.GetAsync(id);
+
+            if (experience.UserId != _currentUser.GetId())
+            {
+                throw new UserFriendlyException("No tienes permiso para eliminar esta experiencia.");
+            }
+
+            await Repository.DeleteAsync(id);
         }
 
-        // 4.6: Implementación del buscador por descripción
-        public async Task<List<TravelExperienceDto>> GetListAsync(GetTravelExperienceListDto input)
+        public override async Task<TravelExperienceDto> UpdateAsync(Guid id, CreateUpdateTravelExperienceDto input)
         {
-            var queryable = await _repository.GetQueryableAsync();
+            var experience = await Repository.GetAsync(id);
 
-            var query = queryable
-                .Where(x => x.DestinationId == input.DestinationId)
-                // Filtra por palabra clave si existe
-                .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.Description.Contains(input.Keyword))
-                // Opción recomendada: Convertir el número al tipo del Enum
-                .WhereIf(input.Rating.HasValue, x => x.Rating == (TravelRating)input.Rating.Value);
+            if (experience.UserId != _currentUser.GetId())
+            {
+                throw new UserFriendlyException("No tienes permiso para editar esta experiencia.");
+            }
 
-            var experiences = await AsyncExecuter.ToListAsync(query);
-            return ObjectMapper.Map<List<TravelExperience>, List<TravelExperienceDto>>(experiences);
-        }
+            ObjectMapper.Map(input, experience);
 
-        public async Task DeleteAsync(Guid id) => await _repository.DeleteAsync(id);
-
-        public async Task<TravelExperienceDto> UpdateAsync(Guid id, CreateUpdateTravelExperienceDto input)
-        {
-            var experience = await _repository.GetAsync(id);
-
-            experience.Description = input.Description;
-            experience.Rating = input.Rating;
-
-            await _repository.UpdateAsync(experience);
+            await Repository.UpdateAsync(experience);
             return ObjectMapper.Map<TravelExperience, TravelExperienceDto>(experience);
         }
     }

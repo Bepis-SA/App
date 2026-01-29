@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { RatingService, RatingDto, CreateUpdateRatingDto } from '../proxy/ratings'; // Ajustá la ruta según tu proxy
+import { RatingService, RatingDto, CreateUpdateRatingDto } from '../proxy/ratings';
 import { ConfigStateService } from '@abp/ng.core';
 import { CommonModule } from '@angular/common';
 // 1. IMPORTANTE: Agregá esta importación
@@ -19,6 +19,8 @@ export class RatingsComponent implements OnInit {
   ratings: RatingDto[] = [];
   averageRating: string = '0';
   currentUserId: string;
+  isEditing = false;
+  editingId: string | null = null;
 
   // Objeto para el formulario de nueva calificación (5.1 y 5.2)
   newRating: CreateUpdateRatingDto = {
@@ -31,8 +33,46 @@ export class RatingsComponent implements OnInit {
     private ratingService: RatingService,
     private configState: ConfigStateService
   ) {
-    // Obtenemos el ID del usuario actual para habilitar Edición/Eliminación (5.3)
     this.currentUserId = this.configState.getDeep('currentUser.id');
+  }
+
+  submitRating() {
+    this.newRating.destinationId = this.destinationId;
+
+    if (this.isEditing && this.editingId) {
+      // MODO EDICIÓN
+      this.ratingService.update(this.editingId, this.newRating).subscribe({
+        next: () => {
+          alert('¡Calificación actualizada!');
+          this.resetForm();
+        },
+        error: (err) => alert(err.error?.error?.message || 'Error al actualizar')
+      });
+    } else {
+      // MODO CREACIÓN
+      this.ratingService.create(this.newRating).subscribe({
+        next: () => {
+          alert('¡Gracias por calificar!');
+          this.resetForm();
+        },
+        error: (err) => alert(err.error?.error?.message || 'Error al guardar')
+      });
+    }
+  }
+
+  prepareEdit(rating: RatingDto) {
+    this.isEditing = true;
+    this.editingId = rating.id;
+
+    // Llenamos el objeto del formulario con los valores actuales
+    this.newRating = {
+      ...this.newRating, // Mantenemos el destinationId si existe
+      score: rating.score,
+      comment: rating.comment
+    };
+
+    // Opcional: scroll al formulario
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   ngOnInit(): void {
@@ -49,7 +89,6 @@ export class RatingsComponent implements OnInit {
       if (this.ratings.length > 0) {
         const suma = this.ratings.reduce((acc, item) => acc + item.score, 0);
 
-        // CAMBIÁ 'average' POR 'averageRating' AQUÍ
         this.averageRating = (suma / this.ratings.length).toFixed(1);
       } else {
         this.averageRating = '0';
@@ -57,33 +96,20 @@ export class RatingsComponent implements OnInit {
     });
   }
 
+  resetForm() {
+    this.isEditing = false;
+    this.editingId = null;
+    this.newRating = {
+      destinationId: this.destinationId,
+      score: 0,
+      comment: ''
+    };
+    this.loadRatings(); // Refresca la lista y el promedio
+  }
+
   // 5.1: Establecer puntaje desde las estrellas del HTML
   setScore(val: number) {
     this.newRating.score = val;
-  }
-
-  // 5.2: Crear nueva calificación
-  submitRating() {
-    this.newRating.destinationId = this.destinationId;
-
-    this.ratingService.create(this.newRating).subscribe({
-      next: () => {
-        alert('¡Gracias por calificar!');
-        this.newRating = { destinationId: '', score: 0, comment: '' }; // Limpiar
-        this.loadRatings(); // Refrescar lista y promedio
-      },
-      error: (err) => alert(err.error?.error?.message || 'Error al guardar')
-    });
-  }
-
-  // 5.4: Consultar promedio de calificaciones
-  calculateAverage() {
-    if (this.ratings.length > 0) {
-      const total = this.ratings.reduce((sum, item) => sum + item.score, 0);
-      this.averageRating = (total / this.ratings.length).toFixed(1);
-    } else {
-      this.averageRating = '0';
-    }
   }
 
   // 5.3: Eliminar calificación propia

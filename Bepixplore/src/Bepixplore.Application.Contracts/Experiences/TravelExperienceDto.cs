@@ -9,5 +9,6 @@ namespace Bepixplore.Experiences
         public TravelRating Rating { get; set; }
         public string Description { get; set; }
         public DateTime TravelDate { get; set; }
+        public Guid UserId { get; set; }
     }
 }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ListService, CoreModule } from '@abp/ng.core';
 import { ThemeSharedModule } from '@abp/ng.theme.shared';
 import { map } from 'rxjs/operators';
-import { FavoriteService } from '../proxy/favorites/favorite.service'; // Usamos el nuevo servicio
+import { FavoriteService } from '../proxy/favorites/favorite.service';
 import { DestinationDto } from '../proxy/application/contracts/destinations/models';
 
 @Component({
@@ -22,18 +22,14 @@ export class Destinations implements OnInit {
   totalCount = 0;
 
   ngOnInit() {
-    // 1. Cambiamos el creador del stream para que use favoritos
     const favoriteStreamCreator = (query) =>
       this.favoriteService.getList().pipe(
-        // 2. Mapeamos el array simple a un objeto con 'items' y 'totalCount'
-        // para que hookToQuery siga funcionando perfecto
         map((response) => ({
           items: response,
           totalCount: response.length
         }))
       );
 
-    // 3. Enganchamos el servicio de lista de ABP
     this.list.hookToQuery(favoriteStreamCreator).subscribe((response) => {
       this.items = response.items;
       this.totalCount = response.totalCount;
@@ -42,7 +38,6 @@ export class Destinations implements OnInit {
 
   loadFavorites() {
     this.favoriteService.getList().subscribe((response) => {
-      // Como el servicio devuelve List<DestinationDto>, lo asignamos directo
       this.items = response;
       this.totalCount = response.length;
     });
@@ -50,9 +45,8 @@ export class Destinations implements OnInit {
 
   delete(id: string) {
     if (confirm('¿Seguro que querés quitar este destino de tus favoritos?')) {
-      // 6.2: IMPORTANTE - Usamos 'remove' para quitar el vínculo, NO 'delete' del destino global
       this.favoriteService.remove(id).subscribe(() => {
-        this.loadFavorites(); // Recarga la lista personal
+        this.loadFavorites();
       });
     }
   }
