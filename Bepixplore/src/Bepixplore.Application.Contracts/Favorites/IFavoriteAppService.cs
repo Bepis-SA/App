@@ -9,7 +9,8 @@ namespace Bepixplore.Favorites
 {
     public interface IFavoriteAppService : IApplicationService
     {
-        Task AddAsync(CreateUpdateDestinationDto input);
+        // En IFavoriteAppService.cs
+        Task<DestinationDto> AddAsync(CreateUpdateDestinationDto input);
 
         // 6.2: Eliminar de favoritos
         Task RemoveAsync(Guid destinationId);

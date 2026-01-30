@@ -1,9 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';  // Se agrega inject
 import { RatingService, RatingDto, CreateUpdateRatingDto } from '../proxy/ratings'; // Ajustá la ruta según tu proxy
 import { ConfigStateService } from '@abp/ng.core';
 import { CommonModule } from '@angular/common';
 // 1. IMPORTANTE: Agregá esta importación
 import { FormsModule } from '@angular/forms';
+
+import { ToasterService, ConfirmationService, Confirmation } from '@abp/ng.theme.shared'; // Importamos servicios UI
 
 @Component({
   selector: 'app-ratings',
@@ -29,8 +31,10 @@ export class RatingsComponent implements OnInit {
 
   constructor(
     private ratingService: RatingService,
-    private configState: ConfigStateService
-  ) {
+    private configState: ConfigStateService,
+    private toaster: ToasterService,         // <--- AGREGADO
+    private confirmation: ConfirmationService) // <--- AGREGADO 
+    {
     // Obtenemos el ID del usuario actual para habilitar Edición/Eliminación (5.3)
     this.currentUserId = this.configState.getDeep('currentUser.id');
   }
@@ -62,17 +66,18 @@ export class RatingsComponent implements OnInit {
     this.newRating.score = val;
   }
 
-  // 5.2: Crear nueva calificación
-  submitRating() {
+  // 5.2: Crear nueva calificación --> CAMBIO
+submitRating() {
     this.newRating.destinationId = this.destinationId;
 
     this.ratingService.create(this.newRating).subscribe({
       next: () => {
-        alert('¡Gracias por calificar!');
-        this.newRating = { destinationId: '', score: 0, comment: '' }; // Limpiar
-        this.loadRatings(); // Refrescar lista y promedio
+        // REEMPLAZO DE ALERT
+        this.toaster.success('¡Gracias por tu calificación!', 'Enviado');
+        this.newRating = { destinationId: '', score: 0, comment: '' }; 
+        this.loadRatings(); 
       },
-      error: (err) => alert(err.error?.error?.message || 'Error al guardar')
+      error: (err) => this.toaster.error(err.error?.error?.message || 'Error al guardar', 'Error')
     });
   }
 
@@ -86,10 +91,20 @@ export class RatingsComponent implements OnInit {
     }
   }
 
-  // 5.3: Eliminar calificación propia
+  // 5.3: Eliminar calificación propia   --> CAMBIO
   deleteRating(id: string) {
-    if (confirm('¿Borrar tu calificación?')) {
-      this.ratingService.delete(id).subscribe(() => this.loadRatings());
-    }
+    // Confirmación elegante con botón corregido
+    this.confirmation.warn(
+      '¿Quieres borrar tu calificación?', 
+      'Confirmar eliminación',
+      { yesText: 'Confirmar' } // <--- CORRECCIÓN AQUÍ
+    ).subscribe((status: Confirmation.Status) => {
+      if (status === Confirmation.Status.confirm) {
+        this.ratingService.delete(id).subscribe(() => {
+          this.toaster.info('Calificación eliminada', 'Borrado');
+          this.loadRatings();
+        });
+      }
+    });
   }
 }

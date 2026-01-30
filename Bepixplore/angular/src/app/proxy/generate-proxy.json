@@ -1614,8 +1614,8 @@
                     }
                   ],
                   "returnValue": {
-                    "type": "System.Void",
-                    "typeSimple": "System.Void"
+                    "type": "Bepixplore.Application.Contracts.Destinations.DestinationDto",
+                    "typeSimple": "Bepixplore.Application.Contracts.Destinations.DestinationDto"
                   }
                 },
                 {
@@ -1678,10 +1678,10 @@
                 }
               ],
               "returnValue": {
-                "type": "System.Void",
-                "typeSimple": "System.Void"
+                "type": "Bepixplore.Application.Contracts.Destinations.DestinationDto",
+                "typeSimple": "Bepixplore.Application.Contracts.Destinations.DestinationDto"
               },
-              "allowAnonymous": null,
+              "allowAnonymous": false,
               "implementFrom": "Bepixplore.Favorites.IFavoriteAppService"
             },
             "RemoveAsyncByDestinationId": {
@@ -1718,7 +1718,7 @@
                 "type": "System.Void",
                 "typeSimple": "System.Void"
               },
-              "allowAnonymous": null,
+              "allowAnonymous": false,
               "implementFrom": "Bepixplore.Favorites.IFavoriteAppService"
             },
             "GetListAsync": {
@@ -1733,8 +1733,65 @@
                 "type": "System.Collections.Generic.List<Bepixplore.Application.Contracts.Destinations.DestinationDto>",
                 "typeSimple": "[Bepixplore.Application.Contracts.Destinations.DestinationDto]"
               },
-              "allowAnonymous": null,
+              "allowAnonymous": false,
               "implementFrom": "Bepixplore.Favorites.IFavoriteAppService"
+            },
+            "IsFavoriteAsyncByNameAndCountry": {
+              "uniqueName": "IsFavoriteAsyncByNameAndCountry",
+              "name": "IsFavoriteAsync",
+              "httpMethod": "POST",
+              "url": "api/app/favorite/is-favorite",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "name",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "country",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "name",
+                  "name": "name",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "country",
+                  "name": "country",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Boolean",
+                "typeSimple": "boolean"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "Bepixplore.Favorites.FavoriteAppService"
             }
           }
         },

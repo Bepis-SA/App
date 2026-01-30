@@ -1,12 +1,27 @@
 <div class="container py-5">
   <div class="mb-5 border-bottom pb-4">
-    <h1 class="display-3 fw-bold">{{ city?.name | uppercase }}</h1>
-    <p class="lead text-muted">
+    <div class="d-flex align-items-center gap-3">
+      <h1 class="display-3 fw-bold mb-0">{{ city?.name | uppercase }}</h1>
+      
+      <button class="btn btn-lg rounded-circle shadow-sm" 
+              [ngClass]="isFavorite ? 'btn-danger' : 'btn-light'"
+              (click)="toggleFavorite()"
+              [disabled]="isLoading"
+              title="Guardar en favoritos">
+        <span *ngIf="isFavorite">Eliminar de Mis Destinos❤️</span>
+        <span *ngIf="!isFavorite">Agregar a Mis Destinos🤍</span>
+      </button>
+    </div>
+
+    <p class="lead text-muted mt-2">
       <i class="fa fa-globe me-2"></i>{{ city?.country }}
       <span class="mx-2">•</span>
       <i class="fa fa-users me-2"></i>Población: {{ city?.population | number }}
     </p>
-  </div>
+
+<button (click)="goBack()" class="btn btn-outline-secondary px-4">
+  ⬅ Volver
+</button>
 
   <div class="row">
     <div class="col-12">
