@@ -1,6 +1,7 @@
 ﻿using Bepixplore.Application.Contracts.Cities;
 using Bepixplore.Application.Contracts.Destinations;
 using Bepixplore.Cities;
+using Bepixplore.Notifications;
 using NSubstitute;
 using Shouldly;
 using System;
@@ -135,7 +136,8 @@ namespace Bepixplore.Destinations
             var destinationRepositoryMock = Substitute.For<IRepository<Destination, Guid>>();
             var citySearchServiceMock = Substitute.For<ICitySearchService>();
             citySearchServiceMock.SearchCitiesAsync(request).Returns(mockResult);
-            var destinationAppService = new DestinationAppService(destinationRepositoryMock, citySearchServiceMock);
+            var notificationMock = Substitute.For<INotificationAppService>();
+            var destinationAppService = new DestinationAppService(destinationRepositoryMock, citySearchServiceMock, notificationMock);
 
             // Act
             var result = await destinationAppService.SearchCitiesAsync(request);
@@ -155,7 +157,8 @@ namespace Bepixplore.Destinations
             var destinationRepositoryMock = Substitute.For<IRepository<Destination, Guid>>();
             var citySearchServiceMock = Substitute.For<ICitySearchService>();
             citySearchServiceMock.SearchCitiesAsync(request).Returns(mockResult);
-            var destinationAppService = new DestinationAppService(destinationRepositoryMock, citySearchServiceMock);
+            var notificationMock = Substitute.For<INotificationAppService>();
+            var destinationAppService = new DestinationAppService(destinationRepositoryMock, citySearchServiceMock, notificationMock);
 
             // Act
             var result = await destinationAppService.SearchCitiesAsync(request);
@@ -174,7 +177,8 @@ namespace Bepixplore.Destinations
             var destinationRepositoryMock = Substitute.For<IRepository<Destination, Guid>>();
             var citySearchServiceMock = Substitute.For<ICitySearchService>();
             citySearchServiceMock.SearchCitiesAsync(request).Returns(mockResult);
-            var destinationAppService = new DestinationAppService(destinationRepositoryMock, citySearchServiceMock);
+            var notificationMock = Substitute.For<INotificationAppService>();
+            var destinationAppService = new DestinationAppService(destinationRepositoryMock, citySearchServiceMock, notificationMock);
 
             // Act
             var result = await destinationAppService.SearchCitiesAsync(request);
@@ -192,7 +196,8 @@ namespace Bepixplore.Destinations
             var destinationRepositoryMock = Substitute.For<IRepository<Destination, Guid>>();
             var citySearchServiceMock = Substitute.For<ICitySearchService>();
             citySearchServiceMock.When(x => x.SearchCitiesAsync(request)).Do(x => { throw new HttpRequestException("Simulated API error"); });
-            var destinationAppService = new DestinationAppService(destinationRepositoryMock, citySearchServiceMock);
+            var notificationMock = Substitute.For<INotificationAppService>();
+            var destinationAppService = new DestinationAppService(destinationRepositoryMock, citySearchServiceMock, notificationMock);
 
             // Act & Assert
             var exception = await Assert.ThrowsAsync<HttpRequestException>(async () =>
