@@ -1,6 +1,7 @@
 using Bepixplore.Destinations;
 using Bepixplore.Experiences;
 using Bepixplore.Favorites;
+using Bepixplore.Metrics;
 using Bepixplore.Notifications;
 using Bepixplore.Ratings;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,7 @@ public class BepixploreDbContext :
     public DbSet<Favorite> Favorites { get; set; }
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<TravelExperience> TravelExperiences { get; set; }
+    public DbSet<ApiMetric> ApiMetrics { get; set; }
 
     #region Entities from the modules
 
@@ -167,6 +169,11 @@ public class BepixploreDbContext :
             b.ConfigureByConvention();
             b.Property(x => x.Title).IsRequired().HasMaxLength(128);
             b.Property(x => x.Message).IsRequired().HasMaxLength(512);
+        });
+
+        builder.Entity<ApiMetric>(b => {
+            b.ToTable("AppApiMetrics");
+            b.ConfigureByConvention();
         });
     }
 }
