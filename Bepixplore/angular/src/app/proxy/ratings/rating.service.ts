@@ -36,11 +36,27 @@ export class RatingService {
     { apiName: this.apiName,...config });
   
 
+  getAverageRating = (destinationId: string, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, number>({
+      method: 'GET',
+      url: `/api/app/rating/average-rating/${destinationId}`,
+    },
+    { apiName: this.apiName,...config });
+  
+
   getList = (input: PagedAndSortedResultRequestDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, PagedResultDto<RatingDto>>({
       method: 'GET',
       url: '/api/app/rating',
       params: { sorting: input.sorting, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
+    },
+    { apiName: this.apiName,...config });
+  
+
+  getListByDestination = (destinationId: string, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, RatingDto[]>({
+      method: 'GET',
+      url: `/api/app/rating/by-destination/${destinationId}`,
     },
     { apiName: this.apiName,...config });
   

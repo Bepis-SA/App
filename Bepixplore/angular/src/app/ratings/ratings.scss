@@ -1,0 +1,12 @@
+.cursor-pointer {
+  cursor: pointer;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+.star-selector {
+  color: #ffc107;
+}

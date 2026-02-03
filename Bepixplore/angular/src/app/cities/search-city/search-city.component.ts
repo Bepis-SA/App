@@ -1,4 +1,5 @@
 // src/app/cities/search-city/search-city.component.ts
+import { FavoriteService } from '../../proxy/favorites/favorite.service';
 import { Component, OnInit, OnDestroy, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
@@ -6,6 +7,7 @@ import { CoreModule } from '@abp/ng.core';
 import { DestinationService } from '../../proxy/destinations/destination.service';
 import { CityDto } from '../../proxy/application/contracts/cities/models';
 import { CitySearchRequestDto, CitySearchResultDto } from '../../proxy/cities/models';
+import { Router } from '@angular/router';
 import { Subject, of } from 'rxjs';
 import {
   debounceTime,
@@ -15,6 +17,8 @@ import {
   takeUntil,
   finalize,
 } from 'rxjs/operators';
+
+import { ToasterService } from '@abp/ng.theme.shared'; // Importar Toaster
 
 @Component({
   selector: 'app-search-city',
@@ -30,14 +34,23 @@ import {
 
 export class SearchCityComponent implements OnInit, OnDestroy {
   private readonly destinationService = inject(DestinationService);
+  private readonly favoriteService = inject(FavoriteService);
+  private readonly router = inject(Router);
+  private readonly toaster = inject(ToasterService); // Inyectamos Toaster
 
   searchForm = new FormGroup({
     query: new FormControl(''),
+    country: new FormControl(''), // <--- Pais
+    minPopulation: new FormControl<number | null>(null), // <--- Poblacion
   });
 
   get queryControl(): FormControl {
     return this.searchForm.get('query') as FormControl;
   }
+
+  // Agrego estos getters debajo de queryControl para que sea más fácil usarlos:
+  get countryControl(): FormControl { return this.searchForm.get('country') as FormControl; }
+  get minPopulationControl(): FormControl { return this.searchForm.get('minPopulation') as FormControl; }
 
   @Output() citySelected = new EventEmitter<CityDto>();
 
@@ -47,13 +60,13 @@ export class SearchCityComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
-    this.queryControl.valueChanges
+    this.searchForm.valueChanges // Escucha cambios en los 3 campos a la vez
       .pipe(
         takeUntil(this.destroy$),
         debounceTime(400),
-        distinctUntilChanged(),
-        switchMap(term => {
-          const query = (term ?? '').trim();
+        distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
+        switchMap(values => {
+          const query = (values.query ?? '').trim();
           this.loading = true;
           this.cities = [];
 
@@ -62,7 +75,13 @@ export class SearchCityComponent implements OnInit, OnDestroy {
             return of({ cities: [] } as CitySearchResultDto);
           }
 
-          const request: CitySearchRequestDto = { partialName: query };
+          // 3. ARMAMOS EL REQUEST CON LOS 3 FILTROS
+          const request: CitySearchRequestDto = {
+            partialName: query,
+            country: values.country || undefined,
+            minPopulation: values.minPopulation || undefined
+          };
+
           return this.destinationService.searchCities(request).pipe(
             catchError(err => {
               console.error('Error al buscar ciudades:', err);
@@ -81,6 +100,54 @@ export class SearchCityComponent implements OnInit, OnDestroy {
     this.citySelected.emit(city);
     this.searchForm.reset();
     this.cities = [];
+  }
+
+  saveCity(city: CityDto): void {
+    const input = {
+      name: city.name,
+      country: city.country,
+      city: city.name,
+      population: city.population || 0,
+      photo: '',
+      updateDate: new Date().toISOString(),
+      coordinates: {
+        latitude: city.latitude,
+        longitude: city.longitude
+      }
+    };
+
+    this.favoriteService.add(input).subscribe({
+      next: () => {
+        // Toaster Success
+        this.toaster.success(`¡${city.name} se guardó en tus favoritos!`, 'Guardado');
+      },
+      error: (err) => {
+        console.error('Error al guardar:', err);
+        this.toaster.error('No se pudo guardar en favoritos', 'Error');
+      }
+    });
+  }
+
+  viewDetails(city: any) {
+    const cityInput = {
+      name: city.name,
+      country: city.country,
+      city: city.name,
+      population: city.population || 0,
+      photo: '',
+      updateDate: new Date().toISOString(),
+      coordinates: { latitude: city.latitude, longitude: city.longitude }
+    };
+
+    this.destinationService.create(cityInput as any).subscribe({
+      next: (res: any) => {
+        this.router.navigate(['/destinations/details'], { state: { data: res } });
+      },
+      error: (err) => {
+        console.error('Error al preparar el destino:', err);
+        this.router.navigate(['/destinations/details'], { state: { data: city } });
+      }
+    });
   }
 
   ngOnDestroy(): void {

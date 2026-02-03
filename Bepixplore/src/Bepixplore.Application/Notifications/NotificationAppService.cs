@@ -1,0 +1,90 @@
+﻿using Bepixplore;
+using Bepixplore.Notifications;
+using Bepixplore.Favorites;
+using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Volo.Abp;
+using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Guids;
+using Volo.Abp.ObjectMapping;
+using Volo.Abp.Users;
+
+[Authorize]
+public class NotificationAppService : BepixploreAppService, INotificationAppService
+{
+    private readonly IRepository<Notification, Guid> _notificationRepository;
+    private readonly IRepository<Favorite, Guid> _favoriteRepository;
+
+    public NotificationAppService(IRepository<Notification, Guid> notificationRepository, IRepository<Favorite, Guid> favoriteRepository)
+    {
+        _notificationRepository = notificationRepository;
+        _favoriteRepository = favoriteRepository;
+    }
+
+    public async Task<List<NotificationDto>> GetListAsync()
+    {
+        var userId = CurrentUser.GetId();
+
+        var notifications = await _notificationRepository.GetListAsync(n => n.UserId == userId);
+
+        return ObjectMapper.Map<List<Notification>, List<NotificationDto>>(notifications);
+    }
+
+    public async Task DeleteAsync(Guid id)
+    {
+        var notification = await _notificationRepository.GetAsync(id);
+
+        if (notification.UserId != CurrentUser.GetId())
+        {
+            throw new UserFriendlyException("No tienes permiso para eliminar esta notificación.");
+        }
+
+        await _notificationRepository.DeleteAsync(id);
+    }
+
+    public async Task CreateNotificationAsync(Guid targetUserId, string title, string message, NotificationType type)
+    {
+        var notification = new Notification(
+            id: GuidGenerator.Create(),
+            userId: targetUserId,
+            title: title,
+            message: message,
+            type: type
+        );
+
+        await _notificationRepository.InsertAsync(notification);
+    }
+
+    public async Task NotifyDestinationUpdateAsync(Guid destinationId, string destinationName)
+    {
+        var favorites = await _favoriteRepository.GetListAsync(f => f.DestinationId == destinationId);
+
+        foreach (var fav in favorites)
+        {
+            var notification = new Notification(
+                GuidGenerator.Create(),
+                fav.UserId,
+                "📍 Destino Actualizado",
+                $"El destino '{destinationName}' que tienes en favoritos ha sido actualizado.",
+                NotificationType.DestinationUpdate
+            );
+
+            await _notificationRepository.InsertAsync(notification);
+        }
+    }
+
+    public async Task MarkAsReadAsync(Guid id)
+    {
+        var notification = await _notificationRepository.GetAsync(id);
+
+        if (notification.UserId != CurrentUser.GetId())
+        {
+            throw new UserFriendlyException("No tienes permiso para marcar esta notificación.");
+        }
+
+        notification.IsRead = true;
+        await _notificationRepository.UpdateAsync(notification);
+    }
+}
