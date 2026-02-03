@@ -1846,6 +1846,23 @@
                   }
                 },
                 {
+                  "name": "GetAverageRatingAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "destinationId",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Double",
+                    "typeSimple": "number"
+                  }
+                },
+                {
                   "name": "GetAsync",
                   "parametersOnMethod": [
                     {
@@ -2036,6 +2053,43 @@
               "returnValue": {
                 "type": "System.Collections.Generic.List<Bepixplore.Ratings.RatingDto>",
                 "typeSimple": "[Bepixplore.Ratings.RatingDto]"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "Bepixplore.Ratings.IRatingAppService"
+            },
+            "GetAverageRatingAsyncByDestinationId": {
+              "uniqueName": "GetAverageRatingAsyncByDestinationId",
+              "name": "GetAverageRatingAsync",
+              "httpMethod": "GET",
+              "url": "api/app/rating/average-rating/{destinationId}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "destinationId",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "destinationId",
+                  "name": "destinationId",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Double",
+                "typeSimple": "number"
               },
               "allowAnonymous": false,
               "implementFrom": "Bepixplore.Ratings.IRatingAppService"

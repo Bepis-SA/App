@@ -14,5 +14,6 @@ namespace Bepixplore.Ratings
         CreateUpdateRatingDto>
     {
         Task<List<RatingDto>> GetListByDestinationAsync(Guid destinationId);
+        Task<double> GetAverageRatingAsync(Guid destinationId);
     }
 }

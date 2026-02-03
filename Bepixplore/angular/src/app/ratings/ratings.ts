@@ -40,7 +40,6 @@ export class RatingsComponent implements OnInit {
     this.newRating.destinationId = this.destinationId;
 
     if (this.isEditing && this.editingId) {
-      // MODO EDICIÓN
       this.ratingService.update(this.editingId, this.newRating).subscribe({
         next: () => {
           alert('¡Calificación actualizada!');
@@ -49,7 +48,6 @@ export class RatingsComponent implements OnInit {
         error: (err) => alert(err.error?.error?.message || 'Error al actualizar')
       });
     } else {
-      // MODO CREACIÓN
       this.ratingService.create(this.newRating).subscribe({
         next: () => {
           alert('¡Gracias por calificar!');
@@ -64,14 +62,12 @@ export class RatingsComponent implements OnInit {
     this.isEditing = true;
     this.editingId = rating.id;
 
-    // Llenamos el objeto del formulario con los valores actuales
     this.newRating = {
-      ...this.newRating, // Mantenemos el destinationId si existe
+      ...this.newRating,
       score: rating.score,
       comment: rating.comment
     };
 
-    // Opcional: scroll al formulario
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -81,18 +77,15 @@ export class RatingsComponent implements OnInit {
     }
   }
 
-  // 5.5: Listar comentarios de un destino
   loadRatings() {
-    this.ratingService.getListByDestination(this.destinationId).subscribe(res => {
+    const destId = this.destinationId;
+
+    this.ratingService.getAverageRating(destId).subscribe(avg => {
+      this.averageRating = avg.toFixed(1);
+    });
+
+    this.ratingService.getListByDestination(destId).subscribe(res => {
       this.ratings = res;
-
-      if (this.ratings.length > 0) {
-        const suma = this.ratings.reduce((acc, item) => acc + item.score, 0);
-
-        this.averageRating = (suma / this.ratings.length).toFixed(1);
-      } else {
-        this.averageRating = '0';
-      }
     });
   }
 

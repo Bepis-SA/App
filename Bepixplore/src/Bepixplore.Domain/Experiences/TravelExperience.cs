@@ -5,10 +5,10 @@ namespace Bepixplore.Experiences
 {
     public class TravelExperience : FullAuditedAggregateRoot<Guid>
     {
-        public Guid DestinationId { get; set; } // 4.1: Vínculo con destino
+        public Guid DestinationId { get; set; }
         public Guid UserId { get; set; }
-        public TravelRating Rating { get; set; } // 4.5: Valoración
-        public string Description { get; set; } // Para búsqueda por palabras clave
+        public TravelRating Rating { get; set; }
+        public string Description { get; set; }
         public DateTime TravelDate { get; set; }
 
         protected TravelExperience() { }

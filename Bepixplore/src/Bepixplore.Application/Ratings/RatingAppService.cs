@@ -70,6 +70,22 @@ namespace Bepixplore.Ratings
                 return ObjectMapper.Map<List<Rating>, List<RatingDto>>(ratings);
             }
         }
+
+        public async Task<double> GetAverageRatingAsync(Guid destinationId)
+        {
+            using (_dataFilter.Disable<IUserOwned>())
+            {
+                var queryable = await Repository.GetQueryableAsync();
+                var ratings = queryable.Where(x => x.DestinationId == destinationId);
+
+                if (!await AsyncExecuter.AnyAsync(ratings))
+                {
+                    return 0;
+                }
+
+                return await AsyncExecuter.AverageAsync(ratings, x => x.Score);
+            }
+        }
     }
 
 }

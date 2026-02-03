@@ -44,16 +44,12 @@ namespace Bepixplore.Experiences
                     .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.Description.Contains(input.Keyword))
                     .WhereIf(input.Rating.HasValue, x => x.Rating == (TravelRating)input.Rating.Value);
 
-                // Obtenemos el total para la paginación
                 var totalCount = await AsyncExecuter.CountAsync(query);
 
-                // Obtenemos la lista de datos
                 var experiences = await AsyncExecuter.ToListAsync(query);
 
-                // 2. Mapeamos la lista
                 var dtos = ObjectMapper.Map<List<TravelExperience>, List<TravelExperienceDto>>(experiences);
 
-                // 3. Devolvemos el objeto que Swagger espera para no tirar error 500
                 return new PagedResultDto<TravelExperienceDto>(totalCount, dtos);
             }
         }

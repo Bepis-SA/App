@@ -36,6 +36,14 @@ export class RatingService {
     { apiName: this.apiName,...config });
   
 
+  getAverageRating = (destinationId: string, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, number>({
+      method: 'GET',
+      url: `/api/app/rating/average-rating/${destinationId}`,
+    },
+    { apiName: this.apiName,...config });
+  
+
   getList = (input: PagedAndSortedResultRequestDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, PagedResultDto<RatingDto>>({
       method: 'GET',

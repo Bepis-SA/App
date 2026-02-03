@@ -1,5 +1,6 @@
 ﻿using Bepixplore;
 using Bepixplore.Notifications;
+using Bepixplore.Favorites;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,12 @@ using Volo.Abp.Users;
 public class NotificationAppService : BepixploreAppService, INotificationAppService
 {
     private readonly IRepository<Notification, Guid> _notificationRepository;
-    private readonly INotificationAppService _notificationAppService;
+    private readonly IRepository<Favorite, Guid> _favoriteRepository;
 
-    public NotificationAppService(IRepository<Notification, Guid> notificationRepository)
+    public NotificationAppService(IRepository<Notification, Guid> notificationRepository, IRepository<Favorite, Guid> favoriteRepository)
     {
         _notificationRepository = notificationRepository;
+        _favoriteRepository = favoriteRepository;
     }
 
     public async Task<List<NotificationDto>> GetListAsync()
@@ -57,17 +59,20 @@ public class NotificationAppService : BepixploreAppService, INotificationAppServ
 
     public async Task NotifyDestinationUpdateAsync(Guid destinationId, string destinationName)
     {
-        var currentUserId = CurrentUser.GetId();
+        var favorites = await _favoriteRepository.GetListAsync(f => f.DestinationId == destinationId);
 
-        var notification = new Notification(
-            GuidGenerator.Create(),
-            currentUserId,
-            "📍 Destino Actualizado",
-            $"La información de '{destinationName}' ha sido actualizada.",
-            NotificationType.DestinationUpdate
-        );
+        foreach (var fav in favorites)
+        {
+            var notification = new Notification(
+                GuidGenerator.Create(),
+                fav.UserId,
+                "📍 Destino Actualizado",
+                $"El destino '{destinationName}' que tienes en favoritos ha sido actualizado.",
+                NotificationType.DestinationUpdate
+            );
 
-        await _notificationRepository.InsertAsync(notification);
+            await _notificationRepository.InsertAsync(notification);
+        }
     }
 
     public async Task MarkAsReadAsync(Guid id)

@@ -87,10 +87,8 @@ namespace Bepixplore.Application.Tests.Ratings
 
             var repositoryMock = Substitute.For<IRepository<Rating, Guid>>();
 
-            // 1. CREAMOS EL MOCK QUE FALTA
             var dataFilterMock = Substitute.For<Volo.Abp.Data.IDataFilter>();
 
-            // 2. SE LO PASAMOS COMO TERCER ARGUMENTO
             var service = new RatingAppService(repositoryMock, currentUserMock, dataFilterMock);
 
             // Act & Assert
@@ -102,6 +100,32 @@ namespace Bepixplore.Application.Tests.Ratings
                     Score = 5
                 });
             });
+        }
+
+        [Fact]
+        public async Task GetAverageRating_Should_Return_Mathematically_Correct_Value()
+        {
+            // Arrange
+            var destinationId = Guid.NewGuid();
+            var user1Id = _currentUser.GetId();
+            var user2Id = Guid.NewGuid();
+            var user3Id = Guid.NewGuid();
+
+            await WithUnitOfWorkAsync(async () =>
+            {
+                var destinationRepo = GetRequiredService<IRepository<Destination, Guid>>();
+                await destinationRepo.InsertAsync(new Destination(
+                    destinationId, "Cataratas del Iguazú", "Argentina", "Misiones", 100, "iguazu.jpg", DateTime.Now, new Coordinates(0, 0)));
+                await _ratingRepository.InsertAsync(new Rating(Guid.NewGuid(), user1Id, destinationId, 5));
+                await _ratingRepository.InsertAsync(new Rating(Guid.NewGuid(), user2Id, destinationId, 4));
+                await _ratingRepository.InsertAsync(new Rating(Guid.NewGuid(), user3Id, destinationId, 2));
+            });
+
+            // Act
+            var average = await _ratingAppService.GetAverageRatingAsync(destinationId);
+
+            // Assert
+            average.ShouldBe(3.66, 0.01);
         }
     }
 }
