@@ -35,11 +35,16 @@ namespace Bepixplore.Ratings
             _dataFilter = dataFilter;
         }
 
+        [Authorize]
         public override async Task<RatingDto> CreateAsync(CreateUpdateRatingDto input)
         {
+            if (!_currentUser.IsAuthenticated) throw new AbpAuthorizationException();
+
+            var currentUserId = _currentUser.GetId();
+
             var existingRating = await Repository.FirstOrDefaultAsync(r =>
                 r.DestinationId == input.DestinationId &&
-                r.UserId == _currentUser.Id);
+                r.UserId == currentUserId);
 
             if (existingRating != null)
             {
@@ -50,7 +55,8 @@ namespace Bepixplore.Ratings
             }
 
             var newRating = ObjectMapper.Map<CreateUpdateRatingDto, Rating>(input);
-            newRating.UserId = _currentUser.Id.Value;
+
+            newRating.UserId = currentUserId;
 
             await Repository.InsertAsync(newRating, autoSave: true);
             return ObjectMapper.Map<Rating, RatingDto>(newRating);

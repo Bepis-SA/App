@@ -3,12 +3,14 @@ using Bepixplore.Ratings;
 using NSubstitute;
 using Shouldly;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Authorization;
 using Volo.Abp.Data;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Modularity;
+using Volo.Abp.Security.Claims;
 using Volo.Abp.Users;
 using Xunit;
 
@@ -81,25 +83,26 @@ namespace Bepixplore.Application.Tests.Ratings
         [Fact]
         public async Task CreateAsync_Should_Require_Authentication()
         {
-            // Arrange
-            var currentUserMock = Substitute.For<ICurrentUser>();
-            currentUserMock.IsAuthenticated.Returns(false);
+            var principalAccessor = GetRequiredService<ICurrentPrincipalAccessor>();
 
-            var repositoryMock = Substitute.For<IRepository<Rating, Guid>>();
+            var anonymousPrincipal = new ClaimsPrincipal(new ClaimsIdentity());
 
-            var dataFilterMock = Substitute.For<Volo.Abp.Data.IDataFilter>();
-
-            var service = new RatingAppService(repositoryMock, currentUserMock, dataFilterMock);
-
-            // Act & Assert
-            await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
+            using (principalAccessor.Change(anonymousPrincipal))
             {
-                await service.CreateAsync(new CreateUpdateRatingDto
+                // Arrange
+                var input = new CreateUpdateRatingDto
                 {
                     DestinationId = Guid.NewGuid(),
-                    Score = 5
+                    Score = 5,
+                    Comment = "Excelente"
+                };
+
+                // Act & Assert
+                await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
+                {
+                    await _ratingAppService.CreateAsync(input);
                 });
-            });
+            }
         }
 
         [Fact]
