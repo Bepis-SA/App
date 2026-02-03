@@ -11,8 +11,14 @@ public class BepixplorePermissionDefinitionProvider : PermissionDefinitionProvid
     {
         var myGroup = context.AddGroup(BepixplorePermissions.GroupName);
 
-        //Define your own permissions here. Example:
-        //myGroup.AddPermission(BepixplorePermissions.MyPermission1, L("Permission:MyPermission1"));
+        var metricsPermission = myGroup.AddPermission(
+            BepixplorePermissions.Metrics.Default,
+            L("Permission:Metrics"));
+
+        metricsPermission.AddChild(
+            BepixplorePermissions.Metrics.Admin,
+            L("Permission:Metrics.Admin"));
+
     }
 
     private static LocalizableString L(string name)

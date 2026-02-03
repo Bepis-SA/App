@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -7,6 +8,8 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.Authorization;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Users;
+using System.Linq;
+using Volo.Abp.Data;
 
 namespace Bepixplore.Ratings
 {
@@ -21,34 +24,72 @@ namespace Bepixplore.Ratings
             IRatingAppService
     {
         private readonly ICurrentUser _currentUser;
+        private readonly IDataFilter _dataFilter;
 
-        public RatingAppService(IRepository<Rating, Guid> repository, ICurrentUser currentUser)
-            : base(repository)
+        public RatingAppService(
+        IRepository<Rating, Guid> repository,
+        ICurrentUser currentUser,
+        IDataFilter dataFilter) : base(repository)
         {
             _currentUser = currentUser;
+            _dataFilter = dataFilter;
         }
 
+        [Authorize]
         public override async Task<RatingDto> CreateAsync(CreateUpdateRatingDto input)
         {
-            if (!_currentUser.IsAuthenticated)
-            {
-                throw new AbpAuthorizationException();
-            }
+            if (!_currentUser.IsAuthenticated) throw new AbpAuthorizationException();
 
-            var entity = ObjectMapper.Map<CreateUpdateRatingDto, Rating>(input);
-            entity.UserId = _currentUser.GetId();
+            var currentUserId = _currentUser.GetId();
 
             var existingRating = await Repository.FirstOrDefaultAsync(r =>
-                r.DestinationId == entity.DestinationId &&
-                r.UserId == entity.UserId);
+                r.DestinationId == input.DestinationId &&
+                r.UserId == currentUserId);
 
             if (existingRating != null)
             {
-                throw new UserFriendlyException("You have already rated this destination.");
+                existingRating.Score = input.Score;
+                existingRating.Comment = input.Comment;
+                await Repository.UpdateAsync(existingRating, autoSave: true);
+                return ObjectMapper.Map<Rating, RatingDto>(existingRating);
             }
 
-            await Repository.InsertAsync(entity);
-            return ObjectMapper.Map<Rating, RatingDto>(entity);
+            var newRating = ObjectMapper.Map<CreateUpdateRatingDto, Rating>(input);
+
+            newRating.UserId = currentUserId;
+
+            await Repository.InsertAsync(newRating, autoSave: true);
+            return ObjectMapper.Map<Rating, RatingDto>(newRating);
+        }
+
+        public async Task<List<RatingDto>> GetListByDestinationAsync(Guid destinationId)
+        {
+            using (_dataFilter.Disable<IUserOwned>())
+            {
+                var queryable = await Repository.GetQueryableAsync();
+
+                var query = queryable.Where(x => x.DestinationId == destinationId);
+
+                var ratings = await AsyncExecuter.ToListAsync(query);
+                return ObjectMapper.Map<List<Rating>, List<RatingDto>>(ratings);
+            }
+        }
+
+        public async Task<double> GetAverageRatingAsync(Guid destinationId)
+        {
+            using (_dataFilter.Disable<IUserOwned>())
+            {
+                var queryable = await Repository.GetQueryableAsync();
+                var ratings = queryable.Where(x => x.DestinationId == destinationId);
+
+                if (!await AsyncExecuter.AnyAsync(ratings))
+                {
+                    return 0;
+                }
+
+                return await AsyncExecuter.AverageAsync(ratings, x => x.Score);
+            }
         }
     }
+
 }

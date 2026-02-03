@@ -16,5 +16,6 @@ namespace Bepixplore.Destinations
         CreateUpdateDestinationDto>
     {
         Task<CitySearchResultDto> SearchCitiesAsync(CitySearchRequestDto request);
+
     }
 }

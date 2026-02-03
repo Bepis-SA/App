@@ -1,7 +1,11 @@
 using AutoMapper;
 using Bepixplore.Application.Contracts.Destinations;
 using Bepixplore.Destinations;
+using Bepixplore.Experiences;
+using Bepixplore.Notifications;
 using Bepixplore.Ratings;
+using Bepixplore.Users;
+using Volo.Abp.Identity;
 
 namespace Bepixplore;
 
@@ -17,8 +21,20 @@ public class BepixploreApplicationAutoMapperProfile : Profile
         CreateMap<CreateUpdateDestinationDto, Destination>();
         CreateMap<Coordinates, CoordinatesDto>();
         CreateMap<CoordinatesDto, Coordinates>();
+        CreateMap<TravelExperience, TravelExperienceDto>();
+        CreateMap<CreateUpdateTravelExperienceDto, TravelExperience>();
+        CreateMap<Notification, NotificationDto>();
 
         CreateMap<Rating, RatingDto>();
         CreateMap<CreateUpdateRatingDto, Rating>();
+        
+        CreateMap<TravelExperienceDto, TravelExperience>();
+
+        CreateMap<IdentityUser, PublicUserProfileDto>().ForMember(
+            dest => dest.ProfilePictureUrl,
+               opt => opt.MapFrom(src =>
+                   src.ExtraProperties.ContainsKey("ProfilePictureUrl")
+                   ? (string)src.ExtraProperties["ProfilePictureUrl"]
+                   : null));
     }
 }

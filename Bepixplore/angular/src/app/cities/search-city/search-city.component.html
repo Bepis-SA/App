@@ -13,8 +13,22 @@
         <div class="card-body">
           <!-- Input dentro de form -->
           <form [formGroup]="searchForm" class="mb-5">
-            <input type="text" class="form-control form-control-lg rounded-pill shadow-sm text-center"
-              formControlName="query" placeholder="Escribe el nombre de una ciudad (ej: París, Tokio...)" />
+            <div class="row g-3">
+              <div class="col-12">
+                <input type="text" class="form-control" formControlName="query"
+                       placeholder="Nombre de la ciudad (ej: San)" />
+              </div>
+
+              <div class="col-md-6">
+                <input type="text" class="form-control" formControlName="country"
+                       placeholder="Código de país (ej: AR)" />
+              </div>
+
+              <div class="col-md-6">
+                <input type="number" class="form-control" formControlName="minPopulation"
+                       placeholder="Población mínima" />
+              </div>
+            </div>
           </form>
 
           <!-- Loading -->
@@ -57,10 +71,17 @@
                     </div>
                   </div>
 
-                  <button class="btn btn-primary w-100 mt-4" (click)="selectCity(city)">
-                    <i class="fas fa-heart me-2"></i>
-                    Guardar ciudad
-                  </button>
+                  <div class="card-footer border-0 bg-white">
+                    <button class="btn btn-primary w-100 rounded-pill py-2 mt-3"
+                            (click)="saveCity(city)">
+                      <i class="fa fa-heart me-1"></i> Guardar
+                    </button>
+
+                    <button class="btn btn-outline-dark w-100 rounded-pill py-2 mt-2"
+                            (click)="viewDetails(city)">
+                      <i class="fa fa-info-circle me-1"></i> Detalles
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

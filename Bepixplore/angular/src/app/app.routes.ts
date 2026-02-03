@@ -1,5 +1,6 @@
 import { authGuard, permissionGuard } from '@abp/ng.core';
 import { Routes } from '@angular/router';
+import { CityDetailComponent } from './city-detail/city-detail';
 
 export const APP_ROUTES: Routes = [
   {
@@ -22,6 +23,29 @@ export const APP_ROUTES: Routes = [
   {
     path: 'cities',
     loadChildren: () => import('./cities/cities.routes').then(m => m.CITIES_ROUTES),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'destinations', 
+    loadComponent: () => import('./destinations/destinations').then(m => m.Destinations),
+  },
+  {
+    path: 'destinations/details/:id', 
+    loadComponent: () => import('./city-detail/city-detail').then(m => m.CityDetailComponent),
+  },
+  {
+    path: 'destinations/details',
+    component: CityDetailComponent,
+  },
+  {
+    path: 'destinations/details',
+    loadComponent: () =>
+      import('./city-detail/city-detail')
+        .then(m => m.CityDetailComponent), 
+  },
+    {
+    path: 'public-profile',
+    loadChildren: () => import('./public-profile/public-profile.routes').then(c => c.PUBLIC_PROFILE_ROUTES),
     canActivate: [authGuard],
   },
 ];

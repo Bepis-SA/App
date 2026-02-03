@@ -8,6 +8,6 @@ namespace Bepixplore.Ratings
         public Guid UserId { get; set; }
         public Guid DestinationId { get; set; }
         public int Score { get; set; }
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
     }
 }
