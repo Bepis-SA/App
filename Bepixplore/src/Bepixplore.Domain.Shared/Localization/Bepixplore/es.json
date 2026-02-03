@@ -43,6 +43,11 @@
     "CitySearch:Placeholder": "Escribe el nombre de una ciudad...",
     "CitySearch:Loading": "Buscando ciudades...",
     "CitySearch:NoResults": "No se encontraron ciudades",
-    "CitySearch:Population": "hab."
+    "CitySearch:Population": "hab.",
+    "ProfilePictureUrl": "URL de la foto de perfil",
+    "NotificationChannel": "Canal de notificación",
+    "NotificationFrequency": "Frecuencia de notificación",
+    "Menu:PublicProfile": "Buscar Turistas",
+    "DeleteAccount": "Eliminar cuenta"
   }
 }

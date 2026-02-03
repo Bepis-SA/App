@@ -26,26 +26,26 @@ export const APP_ROUTES: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'destinations', // 👈 Esta es la ruta para "Mis Destinos"
+    path: 'destinations', 
     loadComponent: () => import('./destinations/destinations').then(m => m.Destinations),
   },
-  // En APP_ROUTES
   {
-    path: 'destinations/details/:id', // 👈 El :id es OBLIGATORIO
+    path: 'destinations/details/:id', 
     loadComponent: () => import('./city-detail/city-detail').then(m => m.CityDetailComponent),
   },
-
   {
     path: 'destinations/details',
     component: CityDetailComponent,
   },
-
-
   {
     path: 'destinations/details',
     loadComponent: () =>
       import('./city-detail/city-detail')
         .then(m => m.CityDetailComponent), 
   },
-
+    {
+    path: 'public-profile',
+    loadChildren: () => import('./public-profile/public-profile.routes').then(c => c.PUBLIC_PROFILE_ROUTES),
+    canActivate: [authGuard],
+  },
 ];

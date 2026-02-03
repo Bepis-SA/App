@@ -8,3 +8,5 @@ import * as Notifications from './notifications';
 import * as Ratings from './ratings';
 export * from './notification.service';
 export { Application, Cities, Destinations, Experiences, Favorites, Metrics, Notifications, Ratings };
+import * as Users from './users';
+export { Application, Cities, Destinations, Ratings, Users };

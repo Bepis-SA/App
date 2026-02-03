@@ -24,13 +24,19 @@ function configureRoutes() {
       order: 2,
       layout: eLayoutType.application,
     },
-    // Agregamos el Punto 4: Lista de seguimiento
     {
       path: '/destinations',
       name: 'Mis Destinos',
-      iconClass: 'fas fa-heart', // Un corazón para identificar tus favoritos
+      iconClass: 'fas fa-heart',
       order: 3,
       layout: eLayoutType.application,
     },
+      {
+        path: '/public-profile',
+        name: '::Menu:PublicProfile', 
+        iconClass: 'fas fa-users',    
+        order: 4,
+        layout: eLayoutType.application,
+      },
   ]);
 }
