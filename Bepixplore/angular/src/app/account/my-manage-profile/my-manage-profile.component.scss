@@ -1,0 +1,14 @@
+.nav-link {
+  cursor: pointer;
+  font-weight: 500;
+  color: #555;
+
+  &.active {
+    font-weight: bold;
+    color: #000;
+  }
+
+  &.text-danger.active {
+    color: #dc3545 !important; 
+  }
+}

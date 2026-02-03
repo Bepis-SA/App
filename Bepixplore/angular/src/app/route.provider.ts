@@ -24,5 +24,11 @@ function configureRoutes() {
         order: 2,
         layout: eLayoutType.application,
         },
+      {
+        path: '/public-profile',
+        name: '::Menu:PublicProfile', 
+        iconClass: 'fas fa-users',    
+        layout: eLayoutType.application,
+      },
   ]);
 }

@@ -4,6 +4,7 @@ using Bepixplore.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Bepixplore.Migrations
 {
     [DbContext(typeof(BepixploreDbContext))]
-    partial class BepixploreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260128001056_Added_User_Extended_Properties")]
+    partial class Added_User_Extended_Properties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
