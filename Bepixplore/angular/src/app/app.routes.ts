@@ -24,4 +24,9 @@ export const APP_ROUTES: Routes = [
     loadChildren: () => import('./cities/cities.routes').then(m => m.CITIES_ROUTES),
     canActivate: [authGuard],
   },
+  {
+    path: 'public-profile',
+    loadChildren: () => import('./public-profile/public-profile.routes').then(c => c.PUBLIC_PROFILE_ROUTES),
+    canActivate: [authGuard],
+  },
 ];
