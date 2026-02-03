@@ -37,25 +37,23 @@ namespace Bepixplore.Ratings
 
         public override async Task<RatingDto> CreateAsync(CreateUpdateRatingDto input)
         {
-            if (!_currentUser.IsAuthenticated)
-            {
-                throw new AbpAuthorizationException();
-            }
-
-            var entity = ObjectMapper.Map<CreateUpdateRatingDto, Rating>(input);
-            entity.UserId = _currentUser.GetId();
-
             var existingRating = await Repository.FirstOrDefaultAsync(r =>
-                r.DestinationId == entity.DestinationId &&
-                r.UserId == entity.UserId);
+                r.DestinationId == input.DestinationId &&
+                r.UserId == _currentUser.Id);
 
             if (existingRating != null)
             {
-                throw new UserFriendlyException("You have already rated this destination.");
+                existingRating.Score = input.Score;
+                existingRating.Comment = input.Comment;
+                await Repository.UpdateAsync(existingRating, autoSave: true);
+                return ObjectMapper.Map<Rating, RatingDto>(existingRating);
             }
 
-            await Repository.InsertAsync(entity);
-            return ObjectMapper.Map<Rating, RatingDto>(entity);
+            var newRating = ObjectMapper.Map<CreateUpdateRatingDto, Rating>(input);
+            newRating.UserId = _currentUser.Id.Value;
+
+            await Repository.InsertAsync(newRating, autoSave: true);
+            return ObjectMapper.Map<Rating, RatingDto>(newRating);
         }
 
         public async Task<List<RatingDto>> GetListByDestinationAsync(Guid destinationId)

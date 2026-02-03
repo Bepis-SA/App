@@ -26,14 +26,20 @@ export const APP_ROUTES: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'destinations',
+    path: 'destinations', // 👈 Esta es la ruta para "Mis Destinos"
     loadComponent: () => import('./destinations/destinations').then(m => m.Destinations),
+  },
+  // En APP_ROUTES
+  {
+    path: 'destinations/details/:id', // 👈 El :id es OBLIGATORIO
+    loadComponent: () => import('./city-detail/city-detail').then(m => m.CityDetailComponent),
   },
 
   {
     path: 'destinations/details',
     component: CityDetailComponent,
   },
+
 
   {
     path: 'destinations/details',

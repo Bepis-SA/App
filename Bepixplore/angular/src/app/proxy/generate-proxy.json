@@ -1359,6 +1359,43 @@
             }
           ],
           "actions": {
+            "CreateAsyncByInput": {
+              "uniqueName": "CreateAsyncByInput",
+              "name": "CreateAsync",
+              "httpMethod": "POST",
+              "url": "api/app/travel-experience",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto, Bepixplore.Application.Contracts",
+                  "type": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
+                  "typeSimple": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
+                  "typeSimple": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Bepixplore.Experiences.TravelExperienceDto",
+                "typeSimple": "Bepixplore.Experiences.TravelExperienceDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.ICreateAppService<Bepixplore.Experiences.TravelExperienceDto,Bepixplore.Experiences.CreateUpdateTravelExperienceDto>"
+            },
             "GetListAsyncByInput": {
               "uniqueName": "GetListAsyncByInput",
               "name": "GetListAsync",
@@ -1550,43 +1587,6 @@
               "allowAnonymous": null,
               "implementFrom": "Volo.Abp.Application.Services.IUpdateAppService<Bepixplore.Experiences.TravelExperienceDto,System.Guid,Bepixplore.Experiences.CreateUpdateTravelExperienceDto>"
             },
-            "CreateAsyncByInput": {
-              "uniqueName": "CreateAsyncByInput",
-              "name": "CreateAsync",
-              "httpMethod": "POST",
-              "url": "api/app/travel-experience",
-              "supportedVersions": [],
-              "parametersOnMethod": [
-                {
-                  "name": "input",
-                  "typeAsString": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto, Bepixplore.Application.Contracts",
-                  "type": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
-                  "typeSimple": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
-                  "isOptional": false,
-                  "defaultValue": null
-                }
-              ],
-              "parameters": [
-                {
-                  "nameOnMethod": "input",
-                  "name": "input",
-                  "jsonName": null,
-                  "type": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
-                  "typeSimple": "Bepixplore.Experiences.CreateUpdateTravelExperienceDto",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "Body",
-                  "descriptorName": ""
-                }
-              ],
-              "returnValue": {
-                "type": "Bepixplore.Experiences.TravelExperienceDto",
-                "typeSimple": "Bepixplore.Experiences.TravelExperienceDto"
-              },
-              "allowAnonymous": null,
-              "implementFrom": "Volo.Abp.Application.Services.ICreateAppService<Bepixplore.Experiences.TravelExperienceDto,Bepixplore.Experiences.CreateUpdateTravelExperienceDto>"
-            },
             "GetAsyncById": {
               "uniqueName": "GetAsyncById",
               "name": "GetAsync",
@@ -1651,8 +1651,8 @@
                     }
                   ],
                   "returnValue": {
-                    "type": "System.Void",
-                    "typeSimple": "System.Void"
+                    "type": "Bepixplore.Application.Contracts.Destinations.DestinationDto",
+                    "typeSimple": "Bepixplore.Application.Contracts.Destinations.DestinationDto"
                   }
                 },
                 {
@@ -1715,8 +1715,8 @@
                 }
               ],
               "returnValue": {
-                "type": "System.Void",
-                "typeSimple": "System.Void"
+                "type": "Bepixplore.Application.Contracts.Destinations.DestinationDto",
+                "typeSimple": "Bepixplore.Application.Contracts.Destinations.DestinationDto"
               },
               "allowAnonymous": null,
               "implementFrom": "Bepixplore.Favorites.IFavoriteAppService"
@@ -1772,6 +1772,63 @@
               },
               "allowAnonymous": null,
               "implementFrom": "Bepixplore.Favorites.IFavoriteAppService"
+            },
+            "IsFavoriteAsyncByNameAndCountry": {
+              "uniqueName": "IsFavoriteAsyncByNameAndCountry",
+              "name": "IsFavoriteAsync",
+              "httpMethod": "POST",
+              "url": "api/app/favorite/is-favorite",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "name",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "country",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "name",
+                  "name": "name",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "country",
+                  "name": "country",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Boolean",
+                "typeSimple": "boolean"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Bepixplore.Favorites.FavoriteAppService"
             }
           }
         },

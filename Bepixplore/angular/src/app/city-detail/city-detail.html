@@ -1,30 +1,52 @@
 <div class="container py-5">
   <div class="mb-5 border-bottom pb-4">
-    <h1 class="display-3 fw-bold">{{ city?.name | uppercase }}</h1>
-    <p class="lead text-muted">
+    <div class="d-flex align-items-center gap-3">
+      <h1 class="display-3 fw-bold mb-0">{{ city?.name | uppercase }}</h1>
+
+      <button class="btn w-100 rounded-pill py-2 mt-3 shadow-sm"
+              [ngClass]="isFavorite ? 'btn-danger' : 'btn-primary'"
+              (click)="toggleFavorite()"
+              [disabled]="isLoading"
+              title="Guardar en favoritos">
+
+        <ng-container *ngIf="isFavorite">
+          <i class="fa fa-heart-broken me-1"></i> Eliminar de Mis Destinos
+        </ng-container>
+
+        <ng-container *ngIf="!isFavorite">
+          <i class="fa fa-heart me-1"></i> Agregar a Mis Destinos
+        </ng-container>
+
+      </button>
+    </div>
+
+    <p class="lead text-muted mt-2">
       <i class="fa fa-globe me-2"></i>{{ city?.country }}
       <span class="mx-2">•</span>
       <i class="fa fa-users me-2"></i>Población: {{ city?.population | number }}
     </p>
-  </div>
 
-  <div class="row">
-    <div class="col-12">
-      <section class="mb-5 p-4 bg-white shadow-sm rounded-4">
-        <h3 class="fw-bold mb-4 text-warning">
-          <i class="fa fa-star me-2"></i>Calificaciones de la Comunidad
-        </h3>
-        <app-ratings [destinationId]="city?.id"></app-ratings>
-      </section>
+    <button (click)="goBack()" class="btn btn-outline-secondary px-4">
+      ⬅ Volver
+    </button>
 
-      <hr class="my-5">
+    <div class="row">
+      <div class="col-12">
+        <section class="mb-5 p-4 bg-white shadow-sm rounded-4">
+          <h3 class="fw-bold mb-4 text-warning">
+            <i class="fa fa-star me-2"></i>Calificaciones de la Comunidad
+          </h3>
+          <app-ratings [destinationId]="city?.id"></app-ratings>
+        </section>
 
-      <section class="p-4 bg-white shadow-sm rounded-4">
-        <h3 class="fw-bold mb-4 text-primary">
-          <i class="fa fa-comments me-2"></i>Historias de Viajeros
-        </h3>
-        <app-travel-experience [destinationId]="city?.id"></app-travel-experience>
-      </section>
+        <hr class="my-5">
+
+        <section class="p-4 bg-white shadow-sm rounded-4">
+          <h3 class="fw-bold mb-4 text-primary">
+            <i class="fa fa-comments me-2"></i>Historias de Viajeros
+          </h3>
+          <app-travel-experience [destinationId]="city?.id"></app-travel-experience>
+        </section>
+      </div>
     </div>
   </div>
-</div>

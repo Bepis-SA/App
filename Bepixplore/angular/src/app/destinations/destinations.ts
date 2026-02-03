@@ -2,9 +2,11 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListService, CoreModule } from '@abp/ng.core';
 import { ThemeSharedModule } from '@abp/ng.theme.shared';
+import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { FavoriteService } from '../proxy/favorites/favorite.service';
 import { DestinationDto } from '../proxy/application/contracts/destinations/models';
+import { ToasterService, ConfirmationService, Confirmation } from '@abp/ng.theme.shared';
 
 @Component({
   selector: 'app-destinations',
@@ -17,6 +19,9 @@ import { DestinationDto } from '../proxy/application/contracts/destinations/mode
 export class Destinations implements OnInit {
   public readonly list = inject(ListService);
   private readonly favoriteService = inject(FavoriteService);
+  private readonly toaster = inject(ToasterService);
+  private readonly confirmation = inject(ConfirmationService);
+  private readonly router = inject(Router);
 
   items: DestinationDto[] = [];
   totalCount = 0;
@@ -43,11 +48,38 @@ export class Destinations implements OnInit {
     });
   }
 
+  viewDetails(item: any) {
+    this.router.navigate(['/destinations/details', item.id]);
+  }
+
   delete(id: string) {
-    if (confirm('¿Seguro que querés quitar este destino de tus favoritos?')) {
-      this.favoriteService.remove(id).subscribe(() => {
-        this.loadFavorites();
-      });
-    }
+    this.confirmation.warn(
+      '¿Seguro que querés quitar este destino de tus favoritos?',
+      'Quitar de favoritos',
+      {
+        yesText: 'Quitar',
+        noText: 'Cancelar',
+      } as Partial<Confirmation.Options>
+    ).subscribe((status: Confirmation.Status) => {
+      if (status === Confirmation.Status.confirm) {
+        this.favoriteService.remove(id).subscribe({
+          next: () => {
+            this.loadFavorites();
+
+            this.toaster.success(
+              'El destino ha sido eliminado de tu lista.',
+              'Favorito quitado'
+            );
+          },
+          error: (err) => {
+            this.toaster.error(
+              'Hubo un problema al intentar eliminar el favorito.',
+              'Error'
+            );
+            console.error(err);
+          }
+        });
+      }
+    });
   }
 }

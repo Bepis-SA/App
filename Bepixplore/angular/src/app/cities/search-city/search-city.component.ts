@@ -18,6 +18,8 @@ import {
   finalize,
 } from 'rxjs/operators';
 
+import { ToasterService } from '@abp/ng.theme.shared'; // Importar Toaster
+
 @Component({
   selector: 'app-search-city',
   standalone: true,
@@ -34,6 +36,7 @@ export class SearchCityComponent implements OnInit, OnDestroy {
   private readonly destinationService = inject(DestinationService);
   private readonly favoriteService = inject(FavoriteService);
   private readonly router = inject(Router);
+  private readonly toaster = inject(ToasterService); // Inyectamos Toaster
 
   searchForm = new FormGroup({
     query: new FormControl(''),
@@ -115,11 +118,12 @@ export class SearchCityComponent implements OnInit, OnDestroy {
 
     this.favoriteService.add(input).subscribe({
       next: () => {
-        alert(`¡${city.name} se guardó en tus destinos favoritos!`);
+        // Toaster Success
+        this.toaster.success(`¡${city.name} se guardó en tus favoritos!`, 'Guardado');
       },
       error: (err) => {
-        console.error('Error al guardar en favoritos:', err);
-        alert('Hubo un error al intentar guardar en tus favoritos.');
+        console.error('Error al guardar:', err);
+        this.toaster.error('No se pudo guardar en favoritos', 'Error');
       }
     });
   }

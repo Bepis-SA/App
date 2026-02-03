@@ -10,7 +10,6 @@ namespace Bepixplore.Experiences
     {
         Task<TravelExperienceDto> CreateAsync(CreateUpdateTravelExperienceDto input);
 
-        // 4.6: Búsqueda por palabras clave
         Task<PagedResultDto<TravelExperienceDto>> GetListAsync(GetTravelExperienceListDto input);
 
         Task<TravelExperienceDto> UpdateAsync(Guid id, CreateUpdateTravelExperienceDto input);

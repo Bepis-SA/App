@@ -11,7 +11,7 @@ export class FavoriteService {
   
 
   add = (input: CreateUpdateDestinationDto, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, void>({
+    this.restService.request<any, DestinationDto>({
       method: 'POST',
       url: '/api/app/favorite',
       body: input,
@@ -23,6 +23,15 @@ export class FavoriteService {
     this.restService.request<any, DestinationDto[]>({
       method: 'GET',
       url: '/api/app/favorite',
+    },
+    { apiName: this.apiName,...config });
+  
+
+  isFavorite = (name: string, country: string, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, boolean>({
+      method: 'POST',
+      url: '/api/app/favorite/is-favorite',
+      params: { name, country },
     },
     { apiName: this.apiName,...config });
   

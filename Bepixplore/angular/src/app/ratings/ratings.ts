@@ -1,28 +1,27 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { RatingService, RatingDto, CreateUpdateRatingDto } from '../proxy/ratings';
 import { ConfigStateService } from '@abp/ng.core';
 import { CommonModule } from '@angular/common';
-// 1. IMPORTANTE: Agregá esta importación
 import { FormsModule } from '@angular/forms';
+
+import { ToasterService, ConfirmationService, Confirmation } from '@abp/ng.theme.shared';
 
 @Component({
   selector: 'app-ratings',
   standalone: true,
-  // 2. AGREGALO AQUÍ: Esto habilita el uso de [(ngModel)]
   imports: [CommonModule, FormsModule],
   templateUrl: './ratings.html',
   styleUrl: './ratings.scss'
 })
 export class RatingsComponent implements OnInit {
-  @Input() destinationId: string; // Recibe el ID desde el padre (CityDetail)
+  @Input() destinationId: string;
 
   ratings: RatingDto[] = [];
   averageRating: string = '0';
   currentUserId: string;
-  isEditing = false;
-  editingId: string | null = null;
+  isEditing: boolean = false;
+  editingRatingId: string | null = null;
 
-  // Objeto para el formulario de nueva calificación (5.1 y 5.2)
   newRating: CreateUpdateRatingDto = {
     destinationId: '',
     score: 0,
@@ -31,44 +30,11 @@ export class RatingsComponent implements OnInit {
 
   constructor(
     private ratingService: RatingService,
-    private configState: ConfigStateService
-  ) {
+    private configState: ConfigStateService,
+    private toaster: ToasterService,
+    private confirmation: ConfirmationService)
+  {
     this.currentUserId = this.configState.getDeep('currentUser.id');
-  }
-
-  submitRating() {
-    this.newRating.destinationId = this.destinationId;
-
-    if (this.isEditing && this.editingId) {
-      this.ratingService.update(this.editingId, this.newRating).subscribe({
-        next: () => {
-          alert('¡Calificación actualizada!');
-          this.resetForm();
-        },
-        error: (err) => alert(err.error?.error?.message || 'Error al actualizar')
-      });
-    } else {
-      this.ratingService.create(this.newRating).subscribe({
-        next: () => {
-          alert('¡Gracias por calificar!');
-          this.resetForm();
-        },
-        error: (err) => alert(err.error?.error?.message || 'Error al guardar')
-      });
-    }
-  }
-
-  prepareEdit(rating: RatingDto) {
-    this.isEditing = true;
-    this.editingId = rating.id;
-
-    this.newRating = {
-      ...this.newRating,
-      score: rating.score,
-      comment: rating.comment
-    };
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   ngOnInit(): void {
@@ -89,26 +55,63 @@ export class RatingsComponent implements OnInit {
     });
   }
 
-  resetForm() {
-    this.isEditing = false;
-    this.editingId = null;
-    this.newRating = {
-      destinationId: this.destinationId,
-      score: 0,
-      comment: ''
-    };
-    this.loadRatings(); // Refresca la lista y el promedio
-  }
-
-  // 5.1: Establecer puntaje desde las estrellas del HTML
   setScore(val: number) {
     this.newRating.score = val;
   }
 
-  // 5.3: Eliminar calificación propia
-  deleteRating(id: string) {
-    if (confirm('¿Borrar tu calificación?')) {
-      this.ratingService.delete(id).subscribe(() => this.loadRatings());
+  resetForm() {
+    this.isEditing = false;
+    this.editingRatingId = null;
+    this.newRating = { destinationId: '', score: 0, comment: '' };
+  }
+
+  prepareEdit(rat: RatingDto) {
+    this.isEditing = true;
+    this.editingRatingId = rat.id;
+    this.newRating = {
+      destinationId: this.destinationId,
+      score: rat.score,
+      comment: rat.comment
+    };
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  submitRating() {
+    this.newRating.destinationId = this.destinationId;
+
+    if (this.isEditing && this.editingRatingId) {
+      this.ratingService.update(this.editingRatingId, this.newRating).subscribe({
+        next: () => {
+          this.toaster.success('Calificación actualizada', 'Éxito');
+          this.resetForm();
+          this.loadRatings();
+        },
+        error: (err) => this.toaster.error(err.error?.error?.message || 'Error al actualizar', 'Error')
+      });
+    } else {
+      this.ratingService.create(this.newRating).subscribe({
+        next: () => {
+          this.toaster.success('¡Gracias por tu calificación!', 'Enviado');
+          this.resetForm();
+          this.loadRatings();
+        },
+        error: (err) => this.toaster.error(err.error?.error?.message || 'Error al guardar', 'Error')
+      });
     }
+  }
+
+  deleteRating(id: string) {
+    this.confirmation.warn(
+      '¿Quieres borrar tu calificación?',
+      'Confirmar eliminación',
+      { yesText: 'Confirmar' }
+    ).subscribe((status: Confirmation.Status) => {
+      if (status === Confirmation.Status.confirm) {
+        this.ratingService.delete(id).subscribe(() => {
+          this.toaster.info('Calificación eliminada', 'Borrado');
+          this.loadRatings();
+        });
+      }
+    });
   }
 }

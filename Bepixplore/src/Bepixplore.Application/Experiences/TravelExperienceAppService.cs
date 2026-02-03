@@ -33,6 +33,13 @@ namespace Bepixplore.Experiences
             _dataFilter = dataFilter;
         }
 
+        public override async Task<TravelExperienceDto> CreateAsync(CreateUpdateTravelExperienceDto input)
+        {
+            var experience = ObjectMapper.Map<CreateUpdateTravelExperienceDto, TravelExperience>(input);
+            experience.UserId = _currentUser.GetId();
+            await Repository.InsertAsync(experience);
+            return ObjectMapper.Map<TravelExperience, TravelExperienceDto>(experience);
+        }
         public override async Task<PagedResultDto<TravelExperienceDto>> GetListAsync(GetTravelExperienceListDto input)
         {
             using (_dataFilter.Disable<IUserOwned>())

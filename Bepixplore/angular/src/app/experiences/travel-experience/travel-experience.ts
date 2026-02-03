@@ -1,8 +1,10 @@
-import { Component, OnInit, inject, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnChanges, SimpleChanges, Input, inject } from '@angular/core';
+import { CommonModule, Location } from '@angular/common'; // Location
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfigStateService } from '@abp/ng.core';
+
+import { ToasterService, ConfirmationService, Confirmation } from '@abp/ng.theme.shared'; // notificaciones
 
 import { DestinationService } from '../../proxy/destinations/destination.service';
 import { TravelExperienceService } from '../../proxy/experiences/travel-experience.service';
@@ -24,11 +26,14 @@ export interface GetTravelExperienceListDto {
   styleUrls: ['./travel-experience.scss']
 })
 export class TravelExperienceComponent implements OnInit {
-  // 3. RECIBIR EL ID DESDE EL PADRE (Soluciona NG8002)
   @Input() destinationId: string;
 
   private readonly destinationService = inject(DestinationService);
   readonly router = inject(Router);
+  private readonly location = inject(Location);
+
+  private readonly toaster = inject(ToasterService);
+  private readonly confirmation = inject(ConfirmationService);
 
   isEditing = false;
   editingId: string | null = null;
@@ -52,6 +57,12 @@ export class TravelExperienceComponent implements OnInit {
     this.currentUserId = this.configState.getDeep('currentUser.id');
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['destinationId'] && this.destinationId) {
+      this.getExperiences();
+    }
+  }
+
   ngOnInit(): void {
     this.city = history.state.data;
 
@@ -61,12 +72,23 @@ export class TravelExperienceComponent implements OnInit {
   }
 
   deleteExperience(id: string) {
-    if (confirm('¿Seguro que querés borrar esta historia?')) {
-      this.experienceService.delete(id).subscribe(() => {
-        alert('Eliminado con éxito');
-        this.getExperiences();
-      });
-    }
+    this.confirmation.warn(
+      '¿Estás seguro de que quieres borrar esta historia?',
+      'Confirmar eliminación',
+      { yesText: 'Confirmar' } 
+    ).subscribe((status: Confirmation.Status) => {
+
+      if (status === Confirmation.Status.confirm) {
+        this.experienceService.delete(id).subscribe({
+          next: () => {
+            this.experiences = this.experiences.filter(e => e.id !== id);
+            this.getExperiences();
+            this.toaster.info('Experiencia eliminada correctamente', 'Eliminado');
+          },
+          error: () => this.toaster.error('No se pudo eliminar la experiencia', 'Error')
+        });
+      }
+    });
   }
 
   prepareEdit(exp: any) {
@@ -113,15 +135,19 @@ export class TravelExperienceComponent implements OnInit {
 
     if (this.isEditing && this.editingId) {
       this.experienceService.update(this.editingId, input).subscribe(() => {
-        alert('¡Historia actualizada!');
+        this.toaster.success('¡Historia actualizada con éxito!');
         this.resetForm();
       });
     } else {
       this.experienceService.create(input).subscribe(() => {
-        alert('¡Historia publicada!');
+        this.toaster.success('¡Historia publicada!');
         this.resetForm();
       });
     }
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
 }
