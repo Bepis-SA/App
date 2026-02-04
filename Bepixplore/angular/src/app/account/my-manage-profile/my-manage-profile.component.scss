@@ -35,13 +35,13 @@
     color: var(--text-body);
     text-align: center;
     white-space: nowrap;
-    background-color: #e9ecef;
+    background-color: rgb(240, 233, 233);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
-  
+
   .form-control {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;

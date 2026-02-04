@@ -10,8 +10,8 @@
 }
 
 .search-card {
-  overflow: hidden; 
-  border-radius: var(--radius-lg); 
+  overflow: hidden;
+  border-radius: var(--radius-lg);
 
   .bg-primary {
     background-color: var(--primary) !important;
@@ -32,7 +32,7 @@
 
     .form-group {
       width: 100%;
-      
+
       &.full-width {
         grid-column: 1 / -1;
       }
@@ -48,7 +48,7 @@
   @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   @media (min-width: 992px) {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -57,13 +57,13 @@
 .city-result-card {
   position: relative;
   height: 100%;
-  border-radius: var(--radius-lg); 
+  border-radius: var(--radius-lg);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   padding-top: 0;
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); 
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   }
 
   .floating-badge {
@@ -104,7 +104,7 @@
       color: var(--text-muted);
       font-size: 0.875em;
       margin-bottom: 1rem;
-      
+
       .meta-row {
         display: flex;
         align-items: center;
@@ -118,7 +118,9 @@
           text-overflow: ellipsis;
         }
 
-        i { margin-right: 2px; }
+        i {
+          margin-right: 2px;
+        }
       }
     }
   }
@@ -128,12 +130,13 @@
   text-align: center;
   padding-top: 3rem;
   padding-bottom: 3rem;
+
   &.loading i {
     font-size: 4em;
   }
 
   .state-icon {
-    font-size: 4em; 
+    font-size: 4em;
     margin-bottom: 1.5rem;
     color: var(--text-muted);
   }
@@ -146,4 +149,38 @@
   &.initial .state-icon {
     opacity: 0.25;
   }
+}
+
+.bg-popular {
+  background-color: #fd7e14 !important;
+  /* Color naranja fuego */
+  transition: background-color 0.3s ease;
+}
+
+.popular-toggle-container {
+  padding: 0.5rem 1rem;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+
+  .form-check-input:checked {
+    background-color: #fd7e14;
+    border-color: #fd7e14;
+  }
+}
+
+.icon-circle {
+  transition: background-color 0.3s ease, transform 0.3s ease;
+
+  &.popular-icon {
+    background-color: #fd7e14 !important;
+    transform: scale(1.1);
+  }
+}
+
+/* Mejora para las tarjetas en modo popular */
+.is-popular-active .city-result-card {
+  border: 1px solid rgba(253, 126, 20, 0.2);
 }

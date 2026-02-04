@@ -1,1 +1,60 @@
-<p>favorites works!</p>
+<div class="destinations-container">
+    <div class="container">
+
+        <div class="global-card overflow-hidden">
+            <div class="card-header destinations-header">
+                <h4 class="title">
+                    <i class="fas fa-heart me-2"></i> Mis Destinos
+                </h4>
+                <span class="count-badge">{{ totalCount }} ciudades</span>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="destinations-table">
+                        <thead>
+                            <tr>
+                                <th>Ciudad</th>
+                                <th>País</th>
+                                <th>Población</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (item of items; track item.id) {
+                            <tr>
+                                <td class="fw-bold text-primary">{{ item.name }}</td>
+                                <td>{{ item.country }}</td>
+                                <td>{{ item.population | number }} hab.</td>
+
+                                <td class="text-center">
+                                    <div class="actions-group">
+                                        <button class="btn btn-outline-dark btn-sm btn-pill"
+                                            (click)="viewDetails(item)">
+                                            <i class="fa fa-info-circle me-1"></i> Detalles
+                                        </button>
+
+                                        <button class="btn btn-outline-danger btn-sm btn-pill"
+                                            (click)="delete(item.id)">
+                                            <i class="fa fa-trash me-1"></i> Quitar
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            }
+
+                            @if (items.length === 0) {
+                            <tr>
+                                <td colspan="4" class="empty-state">
+                                    Todavía no has guardado ningún destino en tu lista.
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

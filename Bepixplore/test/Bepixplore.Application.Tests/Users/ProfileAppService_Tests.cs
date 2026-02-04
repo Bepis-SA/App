@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Shouldly;
 using System;
-using System.Security.Claims; // Necesario para Claims
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Volo.Abp.Account;
 using Volo.Abp.Data;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
-using Volo.Abp.Security.Claims; // Necesario para AbpClaimTypes
+using Volo.Abp.Security.Claims;
 using Xunit;
 
 namespace Bepixplore.Users
@@ -17,8 +17,8 @@ namespace Bepixplore.Users
     {
         private readonly IProfileAppService _profileAppService;
         private readonly IIdentityUserRepository _userRepository;
-        private readonly IdentityUserManager _userManager; // Para crear el usuario
-        private readonly ICurrentPrincipalAccessor _currentPrincipalAccessor; // Para suplantarlo
+        private readonly IdentityUserManager _userManager;
+        private readonly ICurrentPrincipalAccessor _currentPrincipalAccessor;
 
         public ProfileAppService_Tests()
         {

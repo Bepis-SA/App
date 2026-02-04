@@ -4,6 +4,7 @@ export interface CitySearchRequestDto {
   partialName?: string;
   country?: string;
   minPopulation?: number;
+  isPopularFilter: boolean;
 }
 
 export interface CitySearchResultDto {

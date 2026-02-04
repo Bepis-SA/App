@@ -2,7 +2,7 @@ namespace Bepixplore.Permissions;
 
 public static class BepixplorePermissions
 {
-    public const string GroupName = "Bepixplore";
+    public const string GroupName = "Sistema";
 
     public static class Metrics
     {

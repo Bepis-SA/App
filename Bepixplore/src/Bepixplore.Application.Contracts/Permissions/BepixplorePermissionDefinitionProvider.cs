@@ -9,15 +9,10 @@ public class BepixplorePermissionDefinitionProvider : PermissionDefinitionProvid
 {
     public override void Define(IPermissionDefinitionContext context)
     {
-        var myGroup = context.AddGroup(BepixplorePermissions.GroupName);
+        var myGroup = context.AddGroup(BepixplorePermissions.GroupName, L("Permission:Sistema"));
 
-        var metricsPermission = myGroup.AddPermission(
-            BepixplorePermissions.Metrics.Default,
-            L("Permission:Metrics"));
-
-        metricsPermission.AddChild(
-            BepixplorePermissions.Metrics.Admin,
-            L("Permission:Metrics.Admin"));
+        var metrics = myGroup.AddPermission(BepixplorePermissions.Metrics.Default, L("Permission:Metrics"));
+        metrics.AddChild(BepixplorePermissions.Metrics.Admin, L("Permission:Metrics.Admin"));
 
     }
 

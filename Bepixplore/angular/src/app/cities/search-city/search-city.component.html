@@ -2,112 +2,102 @@
   <div class="container-fluid content-limiter">
 
     <div class="global-card search-card">
-      <div class="card-header bg-primary text-white">
+      <div class="card-header bg-primary text-white" [class.bg-popular]="searchForm.get('isPopular')?.value">
         <h4 class="mb-0 d-flex align-items-center gap-2">
-          <i class="fas fa-search-location"></i>
-          {{ '::CitySearch:Title' | abpLocalization }}
+          <i [class]="searchForm.get('isPopular')?.value ? 'fas fa-fire' : 'fas fa-search-location'"></i>
+          {{ (searchForm.get('isPopular')?.value ? 'Destinos Populares' : '::CitySearch:Title') | abpLocalization }}
         </h4>
       </div>
 
       <div class="card-body">
-        
+
         <form [formGroup]="searchForm" class="search-filters-form">
           <div class="filters-grid">
-            <div class="form-group full-width">
+            <div class="form-group full-width d-flex gap-2 align-items-center">
               <input type="text" class="form-control" formControlName="query"
-                    placeholder="Nombre de la ciudad (ej: San)" />
+                placeholder="Nombre de la ciudad (ej: San)" />
+
+              <div class="popular-toggle-container">
+                <div class="form-check form-switch mb-0">
+                  <input class="form-check-input" type="checkbox" formControlName="isPopular" id="popSwitch">
+                  <label class="form-check-label fw-bold" for="popSwitch">🔥</label>
+                </div>
+              </div>
             </div>
 
             <div class="form-group">
               <input type="text" class="form-control" formControlName="country"
-                    placeholder="Código de país (ej: AR)" />
+                [placeholder]="searchForm.get('isPopular')?.value ? 'País (ej: Argentina)' : 'País (ej: AR)'" />
             </div>
 
             <div class="form-group">
               <input type="number" class="form-control" formControlName="minPopulation"
-                    placeholder="Población mínima" />
+                placeholder="Población mínima" />
             </div>
           </div>
         </form>
 
         @if (loading) {
-          <div class="state-container loading">
-            <div class="spinner-border text-primary" role="status"></div>
-          </div>
+        <div class="state-container loading">
+          <div class="spinner-border text-primary" role="status"></div>
+        </div>
         }
 
         @if (cities.length > 0) {
-          <div class="results-grid">
-            @for (city of cities; track city) { 
-              <div class="result-item">
-                <div class="city-result-card global-card shadow-sm border-0">
-                  
-                  <div class="floating-badge">
-                    <div class="icon-circle">
-                      <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                  </div>
-
-                  <div class="card-body result-content">
-                    <h5 class="city-name">{{ city.name }}</h5>
-
-                    <div class="city-meta">
-                      <div class="meta-row">
-                        <i class="fas fa-globe-americas text-primary"></i>
-                        <span>País: {{ city.country }}</span>
-                      </div>
-                      
-                      @if (city.region) {
-                        <div class="meta-row">
-                          <i class="fas fa-map text-success"></i>
-                          <span>{{ city.region }}</span>
-                        </div>
-                      }
-
-                      <div class="meta-row">
-                        <i class="fas fa-users text-info"></i>
-                        <span>Población: {{ city.population ? (city.population | number) : 'N/A' }}</span>
-                      </div>
-
-                      <div class="meta-row truncated">
-                        <i class="fas fa-location-dot text-danger"></i>
-                        <small>{{ city.latitude | number:'1.4-4' }}, {{ city.longitude | number:'1.4-4' }}</small>
-                      </div>
-                    </div>
-
-                    <div class="action-buttons mt-auto">
-                      <button class="btn btn-primary w-100 mb-2 btn-pill" (click)="saveCity(city)">
-                        <i class="fa fa-heart me-1"></i> Guardar
-                      </button>
-
-                      <button class="btn btn-outline-dark w-100 btn-pill" (click)="viewDetails(city)">
-                        <i class="fa fa-info-circle me-1"></i> Detalles
-                      </button>
-                    </div>
-                  </div>
-
+        <div class="results-grid">
+          @for (city of cities; track city.name) {
+          <div class="result-item">
+            <div class="city-result-card global-card shadow-sm border-0">
+              <div class="floating-badge">
+                <div class="icon-circle" [class.popular-icon]="searchForm.get('isPopular')?.value">
+                  <i [class]="searchForm.get('isPopular')?.value ? 'fas fa-fire' : 'fas fa-map-marker-alt'"></i>
                 </div>
               </div>
-            }
+
+              <div class="card-body result-content">
+                <h5 class="city-name">{{ city.name }}</h5>
+                <div class="city-meta">
+                  <div class="meta-row">
+                    <i class="fas fa-globe-americas text-primary"></i>
+                    <span>País: {{ city.country }}</span>
+                  </div>
+                  <div class="meta-row">
+                    <i class="fas fa-users text-info"></i>
+                    <span>Población: {{ city.population ? (city.population | number) : 'N/A' }}</span>
+                  </div>
+                </div>
+
+                <div class="action-buttons mt-auto">
+                  <button class="btn btn-primary w-100 mb-2 btn-pill" (click)="saveCity(city)">
+                    <i class="fa fa-heart me-1"></i> Guardar
+                  </button>
+                  <button class="btn btn-outline-dark w-100 btn-pill" (click)="viewDetails(city)">
+                    <i class="fa fa-info-circle me-1"></i> Detalles
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
+          }
+        </div>
         }
 
-        @if (!loading && cities.length === 0 && queryControl.value?.length >= 2) {
-          <div class="state-container empty">
-            <i class="fas fa-city state-icon"></i>
-            <h5 class="text-muted">No se encontraron ciudades</h5>
-          </div>
+        @if (!loading && cities.length === 0 && (queryControl.value?.length >= 2 || searchForm.get('isPopular')?.value))
+        {
+        <div class="state-container empty">
+          <i class="fas fa-city state-icon"></i>
+          <h5 class="text-muted">No se encontraron ciudades</h5>
+        </div>
         }
 
-        @if (!queryControl.value) {
-          <div class="state-container initial">
-            <i class="fas fa-search state-icon"></i>
-            <p class="lead text-muted">Comienza escribiendo el nombre de una ciudad</p>
-          </div>
+        @if (!queryControl.value && !searchForm.get('isPopular')?.value && !loading) {
+        <div class="state-container initial">
+          <i class="fas fa-search state-icon"></i>
+          <p class="lead text-muted">Comienza escribiendo o activa los populares 🔥</p>
+        </div>
         }
 
       </div>
     </div>
-
   </div>
 </div>

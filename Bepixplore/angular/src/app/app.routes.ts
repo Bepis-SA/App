@@ -26,24 +26,20 @@ export const APP_ROUTES: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'destinations', 
-    loadComponent: () => import('./destinations/destinations').then(m => m.Destinations),
+    path: 'favorites',
+    loadComponent: () => import('./favorites/favorites').then(m => m.FavoritesComponent),
   },
   {
-    path: 'destinations/details/:id', 
+    path: 'destinations/details/:id',
     loadComponent: () => import('./city-detail/city-detail').then(m => m.CityDetailComponent),
   },
   {
-    path: 'destinations/details',
-    component: CityDetailComponent,
-  },
-  {
-    path: 'destinations/details',
+    path: 'favorites/details',
     loadComponent: () =>
       import('./city-detail/city-detail')
-        .then(m => m.CityDetailComponent), 
+        .then(m => m.CityDetailComponent),
   },
-    {
+  {
     path: 'public-profile',
     loadChildren: () => import('./public-profile/public-profile.routes').then(c => c.PUBLIC_PROFILE_ROUTES),
     canActivate: [authGuard],

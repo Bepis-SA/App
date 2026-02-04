@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+/*import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListService, CoreModule } from '@abp/ng.core';
 import { ThemeSharedModule } from '@abp/ng.theme.shared';
@@ -82,4 +82,4 @@ export class Destinations implements OnInit {
       }
     });
   }
-}
+}*/

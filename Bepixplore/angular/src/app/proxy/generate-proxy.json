@@ -1626,6 +1626,78 @@
             }
           }
         },
+        "Bepixplore.External.GeoDb.GeoDbCitySearchService": {
+          "controllerName": "GeoDbCitySearch",
+          "controllerGroupName": "GeoDbCitySearch",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "Bepixplore.External.GeoDb.GeoDbCitySearchService",
+          "interfaces": [
+            {
+              "type": "Bepixplore.Cities.ICitySearchService",
+              "name": "ICitySearchService",
+              "methods": [
+                {
+                  "name": "SearchCitiesAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "request",
+                      "typeAsString": "Bepixplore.Cities.CitySearchRequestDto, Bepixplore.Application.Contracts",
+                      "type": "Bepixplore.Cities.CitySearchRequestDto",
+                      "typeSimple": "Bepixplore.Cities.CitySearchRequestDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Bepixplore.Cities.CitySearchResultDto",
+                    "typeSimple": "Bepixplore.Cities.CitySearchResultDto"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "SearchCitiesAsyncByRequest": {
+              "uniqueName": "SearchCitiesAsyncByRequest",
+              "name": "SearchCitiesAsync",
+              "httpMethod": "POST",
+              "url": "api/app/geo-db-city-search/search-cities",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "request",
+                  "typeAsString": "Bepixplore.Cities.CitySearchRequestDto, Bepixplore.Application.Contracts",
+                  "type": "Bepixplore.Cities.CitySearchRequestDto",
+                  "typeSimple": "Bepixplore.Cities.CitySearchRequestDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "request",
+                  "name": "request",
+                  "jsonName": null,
+                  "type": "Bepixplore.Cities.CitySearchRequestDto",
+                  "typeSimple": "Bepixplore.Cities.CitySearchRequestDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Bepixplore.Cities.CitySearchResultDto",
+                "typeSimple": "Bepixplore.Cities.CitySearchResultDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Bepixplore.Cities.ICitySearchService"
+            }
+          }
+        },
         "Bepixplore.Favorites.FavoriteAppService": {
           "controllerName": "Favorite",
           "controllerGroupName": "Favorite",
@@ -5323,6 +5395,18 @@
           "jsonName": null,
           "type": "System.Int32?",
           "typeSimple": "number?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "IsPopularFilter",
+          "jsonName": null,
+          "type": "System.Boolean",
+          "typeSimple": "boolean",
           "isRequired": false,
           "minLength": null,
           "maxLength": null,

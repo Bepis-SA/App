@@ -8,6 +8,7 @@ import { CityDto } from '../../proxy/application/contracts/cities/models';
 import { CitySearchRequestDto, CitySearchResultDto } from '../../proxy/cities/models';
 import { Router } from '@angular/router';
 import { Subject, of } from 'rxjs';
+import { GeoDbCitySearchService } from '@proxy/external/geo-db';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -32,6 +33,7 @@ import { ToasterService } from '@abp/ng.theme.shared';
 })
 
 export class SearchCityComponent implements OnInit, OnDestroy {
+  private readonly citySearchService = inject(GeoDbCitySearchService);
   private readonly destinationService = inject(DestinationService);
   private readonly favoriteService = inject(FavoriteService);
   private readonly router = inject(Router);
@@ -39,14 +41,15 @@ export class SearchCityComponent implements OnInit, OnDestroy {
 
   searchForm = new FormGroup({
     query: new FormControl(''),
-    country: new FormControl(''), 
-    minPopulation: new FormControl<number | null>(null), 
+    country: new FormControl(''),
+    minPopulation: new FormControl<number | null>(null),
+    isPopular: new FormControl(false),
   });
 
   get queryControl(): FormControl {
     return this.searchForm.get('query') as FormControl;
   }
-
+  get isPopularControl(): FormControl { return this.searchForm.get('isPopular') as FormControl; }
   get countryControl(): FormControl { return this.searchForm.get('country') as FormControl; }
   get minPopulationControl(): FormControl { return this.searchForm.get('minPopulation') as FormControl; }
 
@@ -58,17 +61,19 @@ export class SearchCityComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
-    this.searchForm.valueChanges 
+    this.searchForm.valueChanges
       .pipe(
         takeUntil(this.destroy$),
         debounceTime(400),
         distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
         switchMap(values => {
           const query = (values.query ?? '').trim();
+          const isPopular = values.isPopular ?? false;
+
           this.loading = true;
           this.cities = [];
 
-          if (query.length < 2) {
+          if (!isPopular && query.length < 2) {
             this.loading = false;
             return of({ cities: [] } as CitySearchResultDto);
           }
@@ -76,12 +81,13 @@ export class SearchCityComponent implements OnInit, OnDestroy {
           const request: CitySearchRequestDto = {
             partialName: query,
             country: values.country || undefined,
-            minPopulation: values.minPopulation || undefined
+            minPopulation: values.minPopulation || undefined,
+            isPopularFilter: isPopular
           };
 
-          return this.destinationService.searchCities(request).pipe(
+          return this.citySearchService.searchCities(request).pipe(
             catchError(err => {
-              console.error('Error al buscar ciudades:', err);
+              console.error('Error:', err);
               return of({ cities: [] } as CitySearchResultDto);
             }),
             finalize(() => this.loading = false)

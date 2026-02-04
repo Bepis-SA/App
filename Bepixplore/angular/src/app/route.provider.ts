@@ -25,18 +25,18 @@ function configureRoutes() {
       layout: eLayoutType.application,
     },
     {
-      path: '/destinations',
+      path: '/favorites',
       name: 'Mis Destinos',
       iconClass: 'fas fa-heart',
       order: 3,
       layout: eLayoutType.application,
     },
-      {
-        path: '/public-profile',
-        name: '::Menu:PublicProfile', 
-        iconClass: 'fas fa-users',    
-        order: 4,
-        layout: eLayoutType.application,
-      },
+    {
+      path: '/public-profile',
+      name: '::Menu:PublicProfile',
+      iconClass: 'fas fa-users',
+      order: 4,
+      layout: eLayoutType.application,
+    },
   ]);
 }

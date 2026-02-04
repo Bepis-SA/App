@@ -48,6 +48,9 @@
     "NotificationChannel": "Canal de notificación",
     "NotificationFrequency": "Frecuencia de notificación",
     "Menu:PublicProfile": "Buscar Turistas",
-    "DeleteAccount": "Eliminar cuenta"
+    "DeleteAccount": "Eliminar cuenta",
+    "Permission:Sistema": "Sistema de Control",
+    "Permission:Metrics": "Métricas",
+    "Permission:Metrics.Admin": "Administración de Métricas"
   }
 }

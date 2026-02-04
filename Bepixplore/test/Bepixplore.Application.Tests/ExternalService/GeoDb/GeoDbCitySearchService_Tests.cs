@@ -1,5 +1,7 @@
 ﻿using Bepixplore.Cities;
+using Bepixplore.Destinations;
 using Bepixplore.External.GeoDb;
+using Bepixplore.Favorites;
 using Bepixplore.Metrics;
 using NSubstitute;
 using Shouldly;
@@ -10,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Guids;
+using Volo.Abp.Linq;
 using Volo.Abp.Modularity;
 using Xunit;
 
@@ -92,16 +95,23 @@ namespace Bepixplore.ExternalServices.GeoDb
             // Arrange
             var failingHttpClient = new HttpClient(new FailingHandler());
 
+            var asyncExecuterMock = Substitute.For<IAsyncQueryableExecuter>();
+            var destinationRepoMock = Substitute.For<IRepository<Destination, Guid>>();
+            var favoriteRepoMock = Substitute.For<IRepository<Favorite, Guid>>();
+
             var apiMetricRepositoryMock = Substitute.For<IRepository<ApiMetric, Guid>>();
             var guidGeneratorMock = Substitute.For<IGuidGenerator>();
 
             var service = new GeoDbCitySearchService(
-                failingHttpClient,
+                asyncExecuterMock, 
+                destinationRepoMock, 
+                favoriteRepoMock,   
+                failingHttpClient, 
                 apiMetricRepositoryMock,
-                guidGeneratorMock
+                guidGeneratorMock 
             );
 
-            var request = new CitySearchRequestDto { PartialName = "Cor" };
+            var request = new CitySearchRequestDto { PartialName = "Cor", IsPopularFilter = false };
 
             // Act
             var result = await service.SearchCitiesAsync(request);
