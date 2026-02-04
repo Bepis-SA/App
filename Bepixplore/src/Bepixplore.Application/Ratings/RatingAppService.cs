@@ -65,12 +65,9 @@ namespace Bepixplore.Ratings
                 var queryable = await Repository.GetQueryableAsync();
                 var query = queryable.Where(x => x.DestinationId == destinationId);
 
-                var totalCount = await AsyncExecuter.CountAsync(query); // Contamos
-                var ratings = await AsyncExecuter.ToListAsync(query); // Traemos la lista
-
+                var totalCount = await AsyncExecuter.CountAsync(query); 
+                var ratings = await AsyncExecuter.ToListAsync(query); 
                 var dtos = ObjectMapper.Map<List<Rating>, List<RatingDto>>(ratings);
-
-                // ✅ Devolvemos el mismo formato que Experiencias
                 return new PagedResultDto<RatingDto>(totalCount, dtos);
             }
         }

@@ -1,4 +1,3 @@
-// src/app/cities/search-city/search-city.component.ts
 import { FavoriteService } from '../../proxy/favorites/favorite.service';
 import { Component, OnInit, OnDestroy, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -18,7 +17,7 @@ import {
   finalize,
 } from 'rxjs/operators';
 
-import { ToasterService } from '@abp/ng.theme.shared'; // Importar Toaster
+import { ToasterService } from '@abp/ng.theme.shared';
 
 @Component({
   selector: 'app-search-city',
@@ -36,19 +35,18 @@ export class SearchCityComponent implements OnInit, OnDestroy {
   private readonly destinationService = inject(DestinationService);
   private readonly favoriteService = inject(FavoriteService);
   private readonly router = inject(Router);
-  private readonly toaster = inject(ToasterService); // Inyectamos Toaster
+  private readonly toaster = inject(ToasterService);
 
   searchForm = new FormGroup({
     query: new FormControl(''),
-    country: new FormControl(''), // <--- Pais
-    minPopulation: new FormControl<number | null>(null), // <--- Poblacion
+    country: new FormControl(''), 
+    minPopulation: new FormControl<number | null>(null), 
   });
 
   get queryControl(): FormControl {
     return this.searchForm.get('query') as FormControl;
   }
 
-  // Agrego estos getters debajo de queryControl para que sea más fácil usarlos:
   get countryControl(): FormControl { return this.searchForm.get('country') as FormControl; }
   get minPopulationControl(): FormControl { return this.searchForm.get('minPopulation') as FormControl; }
 
@@ -60,7 +58,7 @@ export class SearchCityComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
-    this.searchForm.valueChanges // Escucha cambios en los 3 campos a la vez
+    this.searchForm.valueChanges 
       .pipe(
         takeUntil(this.destroy$),
         debounceTime(400),
@@ -75,7 +73,6 @@ export class SearchCityComponent implements OnInit, OnDestroy {
             return of({ cities: [] } as CitySearchResultDto);
           }
 
-          // 3. ARMAMOS EL REQUEST CON LOS 3 FILTROS
           const request: CitySearchRequestDto = {
             partialName: query,
             country: values.country || undefined,
@@ -118,7 +115,6 @@ export class SearchCityComponent implements OnInit, OnDestroy {
 
     this.favoriteService.add(input).subscribe({
       next: () => {
-        // Toaster Success
         this.toaster.success(`¡${city.name} se guardó en tus favoritos!`, 'Guardado');
       },
       error: (err) => {

@@ -11,7 +11,6 @@
         </div>
 
         <div class="card-body">
-          <!-- Input dentro de form -->
           <form [formGroup]="searchForm" class="mb-5">
             <div class="row g-3">
               <div class="col-12">
@@ -31,16 +30,13 @@
             </div>
           </form>
 
-          <!-- Loading -->
           <div class="text-center py-5" *ngIf="loading">
             <i class="fas fa-spinner fa-spin fa-4x text-primary"></i>
           </div>
 
-          <!-- Resultados en cards -->
           <div class="row g-4" *ngIf="cities.length > 0">
             <div class="col-md-6 col-lg-4" *ngFor="let city of cities">
               <div class="card h-100 shadow-sm border-0 hover-lift position-relative overflow-hidden">
-                <!-- Pin central -->
                 <div class="position-absolute top-0 start-50 translate-middle-x mt-3 z-3">
                   <div
                     class="bg-dark text-white rounded-circle shadow-lg d-flex align-items-center justify-content-center"
@@ -87,13 +83,11 @@
             </div>
           </div>
 
-          <!-- Sin resultados -->
           <div class="text-center py-5" *ngIf="!loading && cities.length === 0 && queryControl.value?.length >= 2">
             <i class="fas fa-city fa-5x text-muted mb-4 opacity-50"></i>
             <h5 class="text-muted">No se encontraron ciudades</h5>
           </div>
 
-          <!-- Estado inicial -->
           <div class="text-center py-5 text-muted" *ngIf="!queryControl.value">
             <i class="fas fa-search fa-4x mb-4 opacity-25"></i>
             <p class="lead">Comienza escribiendo el nombre de una ciudad</p>

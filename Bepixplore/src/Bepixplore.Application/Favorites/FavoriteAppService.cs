@@ -28,8 +28,6 @@ namespace Bepixplore.Favorites
         public async Task<DestinationDto> AddAsync(CreateUpdateDestinationDto input)
         {
             var userId = CurrentUser.GetId();
-
-            // 1. Buscamos o Creamos el destino
             var destination = await _destinationRepository.FirstOrDefaultAsync(x =>
                 x.Name == input.Name && x.Country == input.Country);
 
@@ -45,11 +43,8 @@ namespace Bepixplore.Favorites
                     input.UpdateDate,
                     new Coordinates(input.Coordinates.Latitude, input.Coordinates.Longitude)
                 );
-                // Guardamos el destino nuevo
                 await _destinationRepository.InsertAsync(destination, autoSave: true);
             }
-
-            // 2. Verificamos si ya era favorito para no duplicar
             var existingFavorite = await _favoriteRepository.FirstOrDefaultAsync(x =>
                 x.UserId == userId && x.DestinationId == destination.Id);
 
@@ -60,8 +55,6 @@ namespace Bepixplore.Favorites
                     autoSave: true
                 );
             }
-
-            // 3. Devolvemos el destino completo (con su ID nuevo) al Frontend
             return ObjectMapper.Map<Destination, DestinationDto>(destination);
         }
 
@@ -76,7 +69,6 @@ namespace Bepixplore.Favorites
                 await _favoriteRepository.DeleteAsync(favorite);
             }
         }
-
         public async Task<List<DestinationDto>> GetListAsync()
         {
             var userId = CurrentUser.GetId();

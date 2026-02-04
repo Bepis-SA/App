@@ -151,9 +151,8 @@ public class BepixploreDbContext :
 
         builder.Entity<Favorite>(b =>
         {
-            b.ToTable("Favorites"); // Nombre de la tabla
-            b.ConfigureByConvention(); // Configura las auditorías de ABP
-                                       // Índice único para evitar que un usuario agregue dos veces el mismo destino
+            b.ToTable("Favorites"); 
+            b.ConfigureByConvention(); 
             b.HasIndex(x => new { x.UserId, x.DestinationId }).IsUnique();
         });
 

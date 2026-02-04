@@ -1,11 +1,9 @@
 import { Component, OnInit, OnChanges, SimpleChanges, Input, inject } from '@angular/core';
-import { CommonModule, Location } from '@angular/common'; // Location
+import { CommonModule, Location } from '@angular/common'; 
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfigStateService } from '@abp/ng.core';
-
-import { ToasterService, ConfirmationService, Confirmation } from '@abp/ng.theme.shared'; // notificaciones
-
+import { ToasterService, ConfirmationService, Confirmation } from '@abp/ng.theme.shared'; 
 import { DestinationService } from '../../proxy/destinations/destination.service';
 import { TravelExperienceService } from '../../proxy/experiences/travel-experience.service';
 import { TravelExperienceDto, CreateUpdateTravelExperienceDto } from '../../proxy/experiences/models';
