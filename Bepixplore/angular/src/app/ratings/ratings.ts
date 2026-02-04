@@ -1,8 +1,8 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
 import { RatingService, RatingDto, CreateUpdateRatingDto } from '../proxy/ratings';
 import { ConfigStateService } from '@abp/ng.core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
 
 import { ToasterService, ConfirmationService, Confirmation } from '@abp/ng.theme.shared';
 
@@ -13,7 +13,7 @@ import { ToasterService, ConfirmationService, Confirmation } from '@abp/ng.theme
   templateUrl: './ratings.html',
   styleUrl: './ratings.scss'
 })
-export class RatingsComponent implements OnInit {
+export class RatingsComponent implements OnInit, OnChanges {
   @Input() destinationId: string;
 
   ratings: RatingDto[] = [];
@@ -37,6 +37,13 @@ export class RatingsComponent implements OnInit {
     this.currentUserId = this.configState.getDeep('currentUser.id');
   }
 
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['destinationId'] && this.destinationId) {
+      this.loadRatings();
+    }
+  }
+
   ngOnInit(): void {
     if (this.destinationId) {
       this.loadRatings();
@@ -45,13 +52,23 @@ export class RatingsComponent implements OnInit {
 
   loadRatings() {
     const destId = this.destinationId;
+    if (!destId) return;
 
     this.ratingService.getAverageRating(destId).subscribe(avg => {
       this.averageRating = avg.toFixed(1);
     });
 
     this.ratingService.getListByDestination(destId).subscribe(res => {
-      this.ratings = res;
+      let list = res.items;
+
+      const userRatingIndex = list.findIndex(r => r.userId === this.currentUserId);
+
+      if (userRatingIndex > 0) {
+        const userRating = list.splice(userRatingIndex, 1)[0];
+        list.unshift(userRating);
+      }
+
+      this.ratings = list;
     });
   }
 
@@ -98,6 +115,9 @@ export class RatingsComponent implements OnInit {
         error: (err) => this.toaster.error(err.error?.error?.message || 'Error al guardar', 'Error')
       });
     }
+  }
+  get hasUserAlreadyRated(): boolean {
+    return this.ratings.some(rat => rat.userId === this.currentUserId);
   }
 
   deleteRating(id: string) {

@@ -48,30 +48,30 @@ namespace Bepixplore.Ratings
 
             if (existingRating != null)
             {
-                existingRating.Score = input.Score;
-                existingRating.Comment = input.Comment;
-                await Repository.UpdateAsync(existingRating, autoSave: true);
-                return ObjectMapper.Map<Rating, RatingDto>(existingRating);
+                throw new UserFriendlyException("Ya has calificado este destino. Solo se permite una calificación por usuario.");
             }
 
             var newRating = ObjectMapper.Map<CreateUpdateRatingDto, Rating>(input);
-
             newRating.UserId = currentUserId;
 
             await Repository.InsertAsync(newRating, autoSave: true);
             return ObjectMapper.Map<Rating, RatingDto>(newRating);
         }
 
-        public async Task<List<RatingDto>> GetListByDestinationAsync(Guid destinationId)
+        public async Task<PagedResultDto<RatingDto>> GetListByDestinationAsync(Guid destinationId)
         {
             using (_dataFilter.Disable<IUserOwned>())
             {
                 var queryable = await Repository.GetQueryableAsync();
-
                 var query = queryable.Where(x => x.DestinationId == destinationId);
 
-                var ratings = await AsyncExecuter.ToListAsync(query);
-                return ObjectMapper.Map<List<Rating>, List<RatingDto>>(ratings);
+                var totalCount = await AsyncExecuter.CountAsync(query); // Contamos
+                var ratings = await AsyncExecuter.ToListAsync(query); // Traemos la lista
+
+                var dtos = ObjectMapper.Map<List<Rating>, List<RatingDto>>(ratings);
+
+                // ✅ Devolvemos el mismo formato que Experiencias
+                return new PagedResultDto<RatingDto>(totalCount, dtos);
             }
         }
 

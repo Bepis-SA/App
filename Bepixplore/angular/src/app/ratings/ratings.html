@@ -16,7 +16,8 @@
 
   <div class="row">
     <div class="col-lg-5 mb-4">
-      <div class="card border-0 shadow-sm rounded-4 p-4 border-start border-warning border-4">
+
+      <div *ngIf="!hasUserAlreadyRated || isEditing" class="card border-0 shadow-sm rounded-4 p-4 border-start border-warning border-4">
         <h4 class="fw-bold mb-3">{{ isEditing ? 'Editar tu puntuación' : 'Deja tu puntuación' }}</h4>
 
         <div class="mb-4 text-center">
@@ -50,6 +51,18 @@
           Cancelar edición
         </button>
       </div>
+
+      <div *ngIf="hasUserAlreadyRated && !isEditing" class="card border-0 shadow-sm rounded-4 p-4 bg-white text-center">
+        <div class="py-4">
+          <div class="text-warning mb-3">
+            <i class="fa fa-check-circle fa-4x"></i>
+          </div>
+          <h4 class="fw-bold">¡Ya calificaste este destino!</h4>
+          <p class="text-muted">Gracias por compartir tu experiencia con la comunidad.</p>
+          <small class="text-secondary">Si quieres cambiar tu opinión, busca tu comentario a la derecha y haz clic en editar.</small>
+        </div>
+      </div>
+
     </div>
 
     <div class="col-lg-7">
@@ -60,12 +73,23 @@
         <p>Aún no hay puntuaciones. ¡Sé el primero!</p>
       </div>
 
-      <div *ngFor="let rat of ratings" class="card border-0 shadow-sm mb-3 rounded-4 bg-white">
+      <div *ngFor="let rat of ratings"
+           class="card border-0 shadow-sm mb-3 rounded-4"
+           [ngClass]="rat.userId === currentUserId ? 'bg-light border-start border-warning border-4' : 'bg-white'">
+
         <div class="card-body p-4">
           <div class="d-flex justify-content-between align-items-center mb-2">
-            <div class="text-warning">
-              <i class="fa" *ngFor="let s of [1,2,3,4,5]"
-                 [ngClass]="s <= rat.score ? 'fa-star' : 'fa-star-o'"></i>
+
+            <div class="d-flex align-items-center">
+              <div class="text-warning me-3">
+                <i class="fa" *ngFor="let s of [1,2,3,4,5]"
+                   [ngClass]="s <= rat.score ? 'fa-star' : 'fa-star-o'"></i>
+              </div>
+
+              <span *ngIf="rat.userId === currentUserId"
+                    class="badge bg-warning text-dark rounded-pill fw-bold px-3">
+                Tu reseña
+              </span>
             </div>
 
             <div *ngIf="rat.userId === currentUserId" class="btn-group">
@@ -79,6 +103,7 @@
               </button>
             </div>
           </div>
+
           <p class="card-text fs-5 mb-0">"{{ rat.comment || 'Sin comentario' }}"</p>
         </div>
       </div>
