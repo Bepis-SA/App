@@ -26,22 +26,27 @@ export class PublicProfileComponent {
   private readonly toaster = inject(ToasterService);
 
   searchUser() {
-    if (!this.searchUsername.trim()) return;
+  if (!this.searchUsername.trim()) return;
 
-    this.loading = true;
-    this.foundUser = null;
-    this.errorMessage = '';
+  this.loading = true;
+  this.foundUser = null;
+  this.errorMessage = '';
 
-    this.userService.getPublicProfile(this.searchUsername)
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: (result) => {
+  this.userService.getPublicProfile(this.searchUsername)
+    .pipe(finalize(() => this.loading = false))
+    .subscribe({
+      next: (result) => {
+        if (result) {
           this.foundUser = result;
-        },
-        error: (err) => {
-          this.errorMessage = err.error?.message || 'No se pudo encontrar el perfil o es privado.';
-          this.toaster.error(this.errorMessage, 'Error de Búsqueda');
+        } else {
+          this.errorMessage = 'El usuario no existe.';
+          this.toaster.info(this.errorMessage, 'Búsqueda');
         }
-      });
-}
+      },
+      error: (err) => {
+        this.errorMessage = 'Ocurrió un error inesperado en el servidor.';
+        this.toaster.error(this.errorMessage, 'Error');
+      }
+    });
+  }
 }

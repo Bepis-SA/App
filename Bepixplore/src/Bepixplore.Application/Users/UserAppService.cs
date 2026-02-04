@@ -22,12 +22,7 @@ namespace Bepixplore.Users
         public async Task<PublicUserProfileDto> GetPublicProfileAsync(string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
-            if (user == null)
-            {
-                throw new UserFriendlyException("El usuario no existe.");
-            }
-
-            return ObjectMapper.Map<IdentityUser, PublicUserProfileDto>(user);
+            return user == null ? null : ObjectMapper.Map<IdentityUser, PublicUserProfileDto>(user);
         }
 
         public async Task DeleteMyAccountAsync()

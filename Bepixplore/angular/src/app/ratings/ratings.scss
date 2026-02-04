@@ -1,12 +1,88 @@
+.ratings-container {
+  margin-top: 1.5rem;
+}
+
+.summary-card {
+  padding: 1.5rem;
+  background-color: var(--light);
+  border-radius: 1rem;
+}
+
+.summary-content {
+  gap: 1.5rem;
+}
+
+.display-score {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 0;
+  color: var(--text-body);
+}
+
+.fs-3 { font-size: 1.75rem; }
+.fs-1 { font-size: 2.5rem; }
+
+.ratings-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+
+  @media (min-width: 992px) {
+    grid-template-columns: 5fr 7fr;
+  }
+}
+
+.border-left-warning {
+  border-left: 5px solid var(--warning) !important;
+}
+
+.star-selector {
+  color: var(--warning);
+}
+
 .cursor-pointer {
   cursor: pointer;
   transition: transform 0.2s;
+  display: inline-block;
 
   &:hover {
     transform: scale(1.2);
   }
 }
 
-.star-selector {
-  color: #ffc107;
+/* Importante: Definimos text-secondary explícitamente para las estrellas vacías */
+.text-secondary {
+  color: var(--secondary) !important;
 }
+
+.badge {
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  
+  &.bg-warning {
+    background-color: var(--warning);
+    color: var(--text-body);
+  }
+}
+
+.btn-icon-only {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  padding: 0.25rem 0.5rem;
+  
+  &:hover {
+    background-color: rgba(0,0,0,0.05);
+    border-radius: 50%;
+  }
+}
+
+.text-primary { color: var(--primary) !important; }
+.text-danger { color: var(--danger) !important; }
+.bg-white { background-color: #fff !important; }

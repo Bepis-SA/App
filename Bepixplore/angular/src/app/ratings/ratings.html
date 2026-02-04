@@ -1,12 +1,12 @@
 <div class="ratings-container mt-4">
 
-  <div class="card bg-light border-0 rounded-4 p-4 mb-5 shadow-sm">
-    <div class="row align-items-center">
-      <div class="col-auto">
-        <h2 class="display-3 fw-bold mb-0 text-dark">{{ averageRating }}</h2>
+  <div class="global-card summary-card border-0 mb-5 shadow-sm">
+    <div class="summary-content d-flex align-items-center">
+      <div class="score-display">
+        <h2 class="display-score">{{ averageRating }}</h2>
       </div>
-      <div class="col">
-        <div class="text-warning fs-3">
+      <div class="score-details">
+        <div class="score-label text-warning fs-3">
           <i class="fa fa-star"></i> Puntaje General
         </div>
         <p class="text-muted mb-0">Basado en {{ ratings.length }} valoraciones de viajeros</p>
@@ -14,99 +14,114 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-lg-5 mb-4">
+  <div class="ratings-layout">
+    
+    <div class="form-column mb-4">
 
-      <div *ngIf="!hasUserAlreadyRated || isEditing" class="card border-0 shadow-sm rounded-4 p-4 border-start border-warning border-4">
-        <h4 class="fw-bold mb-3">{{ isEditing ? 'Editar tu puntuación' : 'Deja tu puntuación' }}</h4>
+      @if (!hasUserAlreadyRated || isEditing) {
+        <div class="global-card border-0 shadow-sm p-4 border-left-warning">
+          <h4 class="fw-bold mb-3">{{ isEditing ? 'Editar tu puntuación' : 'Deja tu puntuación' }}</h4>
 
-        <div class="mb-4 text-center">
-          <div class="star-selector fs-1">
-            <i class="fa cursor-pointer mx-1"
-               *ngFor="let star of [1,2,3,4,5]"
-               (click)="setScore(star)"
-               [ngClass]="star <= newRating.score ? 'fa-star text-warning' : 'fa-star-o text-secondary'">
-            </i>
+          <div class="rating-input-area mb-4 text-center">
+            <div class="star-selector fs-1">
+              @for (star of [1,2,3,4,5]; track star) {
+                <i class="fa cursor-pointer mx-1"
+                   (click)="setScore(star)"
+                   [ngClass]="star <= (newRating.score || 0) ? 'fa-star text-warning' : 'fa-star-o text-secondary'">
+                </i>
+              }
+            </div>
+            <small class="text-muted fw-bold">Selecciona de 1 a 5 estrellas</small>
           </div>
-          <small class="text-muted fw-bold">Selecciona de 1 a 5 estrellas</small>
-        </div>
 
-        <div class="mb-3">
-          <label class="form-label small fw-bold">COMENTARIO BREVE</label>
-          <textarea class="form-control border-0 bg-light" rows="3"
-                    placeholder="Cuéntanos más sobre tu puntuación..."
-                    [(ngModel)]="newRating.comment"></textarea>
-        </div>
-
-        <button class="btn w-100 py-2 fw-bold rounded-pill shadow-sm"
-                [ngClass]="isEditing ? 'btn-info text-white' : 'btn-warning'"
-                [disabled]="newRating.score === 0"
-                (click)="submitRating()">
-          {{ isEditing ? 'Actualizar Cambios' : 'Guardar Calificación' }}
-        </button>
-
-        <button *ngIf="isEditing"
-                class="btn btn-link btn-sm w-100 mt-2 text-secondary"
-                (click)="resetForm()">
-          Cancelar edición
-        </button>
-      </div>
-
-      <div *ngIf="hasUserAlreadyRated && !isEditing" class="card border-0 shadow-sm rounded-4 p-4 bg-white text-center">
-        <div class="py-4">
-          <div class="text-warning mb-3">
-            <i class="fa fa-check-circle fa-4x"></i>
+          <div class="mb-3">
+            <label class="form-label small fw-bold">COMENTARIO BREVE</label>
+            <textarea class="form-control border-0 bg-light" rows="3"
+                      placeholder="Cuéntanos más sobre tu puntuación..."
+                      [(ngModel)]="newRating.comment"></textarea>
           </div>
-          <h4 class="fw-bold">¡Ya calificaste este destino!</h4>
-          <p class="text-muted">Gracias por compartir tu experiencia con la comunidad.</p>
-          <small class="text-secondary">Si quieres cambiar tu opinión, busca tu comentario a la derecha y haz clic en editar.</small>
+
+          <button class="btn w-100 py-2 fw-bold btn-pill shadow-sm"
+                  [ngClass]="isEditing ? 'btn-info text-white' : 'btn-warning'"
+                  [disabled]="!newRating.score || newRating.score === 0"
+                  (click)="submitRating()">
+            {{ isEditing ? 'Actualizar Cambios' : 'Guardar Calificación' }}
+          </button>
+
+          @if (isEditing) {
+            <button class="btn btn-outline-secondary btn-sm w-100 mt-2 border-0"
+                    (click)="resetForm()">
+              Cancelar edición
+            </button>
+          }
         </div>
-      </div>
+      }
+
+      @if (hasUserAlreadyRated && !isEditing) {
+        <div class="global-card border-0 shadow-sm p-4 bg-white text-center">
+          <div class="py-4">
+            <div class="text-warning mb-3">
+              <i class="fa fa-check-circle fa-4x"></i>
+            </div>
+            <h4 class="fw-bold">¡Ya calificaste este destino!</h4>
+            <p class="text-muted">Gracias por compartir tu experiencia con la comunidad.</p>
+            <small class="text-muted">Si quieres cambiar tu opinión, busca tu comentario a la derecha y haz clic en editar.</small>
+          </div>
+        </div>
+      }
 
     </div>
 
-    <div class="col-lg-7">
+    <div class="list-column">
       <h4 class="fw-bold mb-4">Comentarios recientes</h4>
 
-      <div *ngIf="ratings.length === 0" class="text-center py-5 text-muted bg-light rounded-4 border">
-        <i class="fa fa-star-o fa-3x mb-3"></i>
-        <p>Aún no hay puntuaciones. ¡Sé el primero!</p>
-      </div>
+      @if (ratings.length === 0) {
+        <div class="empty-state text-center py-5 text-muted bg-light rounded-lg border">
+          <i class="fa fa-star-o fa-3x mb-3"></i>
+          <p>Aún no hay puntuaciones. ¡Sé el primero!</p>
+        </div>
+      }
 
-      <div *ngFor="let rat of ratings"
-           class="card border-0 shadow-sm mb-3 rounded-4"
-           [ngClass]="rat.userId === currentUserId ? 'bg-light border-start border-warning border-4' : 'bg-white'">
+      @for (rat of ratings; track rat.id) {
+        <div class="global-card border-0 shadow-sm mb-3"
+             [ngClass]="rat.userId === currentUserId ? 'bg-light border-left-warning' : 'bg-white'">
 
-        <div class="card-body p-4">
-          <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
 
-            <div class="d-flex align-items-center">
-              <div class="text-warning me-3">
-                <i class="fa" *ngFor="let s of [1,2,3,4,5]"
-                   [ngClass]="s <= rat.score ? 'fa-star' : 'fa-star-o'"></i>
+              <div class="d-flex align-items-center">
+                <div class="text-warning me-3">
+                  @for (s of [1,2,3,4,5]; track s) {
+                    <i class="fa" [ngClass]="s <= rat.score ? 'fa-star' : 'fa-star-o'"></i>
+                  }
+                </div>
+
+                @if (rat.userId === currentUserId) {
+                  <span class="badge bg-warning text-dark btn-pill fw-bold px-3">
+                    Tu reseña
+                  </span>
+                }
               </div>
 
-              <span *ngIf="rat.userId === currentUserId"
-                    class="badge bg-warning text-dark rounded-pill fw-bold px-3">
-                Tu reseña
-              </span>
+              @if (rat.userId === currentUserId) {
+                <div class="action-buttons">
+                  <button class="btn btn-sm btn-icon-only text-primary"
+                          (click)="prepareEdit(rat)" title="Editar">
+                    <i class="fa fa-pencil"></i>
+                  </button>
+                  <button class="btn btn-sm btn-icon-only text-danger"
+                          (click)="deleteRating(rat.id)" title="Eliminar">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              }
             </div>
 
-            <div *ngIf="rat.userId === currentUserId" class="btn-group">
-              <button class="btn btn-sm btn-outline-primary border-0"
-                      (click)="prepareEdit(rat)" title="Editar">
-                <i class="fa fa-pencil"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger border-0"
-                      (click)="deleteRating(rat.id)" title="Eliminar">
-                <i class="fa fa-trash"></i>
-              </button>
-            </div>
+            <p class="comment-text fs-5 mb-0">"{{ rat.comment || 'Sin comentario' }}"</p>
           </div>
-
-          <p class="card-text fs-5 mb-0">"{{ rat.comment || 'Sin comentario' }}"</p>
         </div>
-      </div>
+      }
+
     </div>
   </div>
 </div>
