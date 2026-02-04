@@ -37,7 +37,7 @@ namespace Bepixplore.ExternalServices.GeoDb
         public async Task SearchCitiesAsync_Should_Return_Real_Cities_And_Map_Correctly()
         {
             // Arrange
-            var request = new CitySearchRequestDto { PartialName = "Cordo" };
+            var request = new CitySearchRequestDto { PartialName = "Córdo" };
 
             // Act
             var result = await _citySearchService.SearchCitiesAsync(request);
@@ -172,7 +172,7 @@ namespace Bepixplore.ExternalServices.GeoDb
             tokyo.ShouldNotBeNull();
             tokyo.Country.ShouldNotBeNullOrWhiteSpace();
 
-            tokyo.Latitude.ShouldBeInRange(20.0f, 45.0f); 
+            tokyo.Latitude.ShouldBeInRange(20.0f, 45.0f);
             tokyo.Longitude.ShouldBeInRange(120.0f, 150.0f);
         }
 
