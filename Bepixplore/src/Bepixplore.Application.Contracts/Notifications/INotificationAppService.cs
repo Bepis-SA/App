@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Volo.Abp.Application.Dtos;
-using Volo.Abp.Application.Services;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Volo.Abp.Application.Services;
 
 namespace Bepixplore.Notifications
 {

@@ -1,20 +1,24 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
 import { RatingService, RatingDto, CreateUpdateRatingDto } from '../proxy/ratings';
 import { ConfigStateService } from '@abp/ng.core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { Component, Input, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { ToasterService, ConfirmationService, Confirmation } from '@abp/ng.theme.shared';
 
 @Component({
   selector: 'app-ratings',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './ratings.html',
-  styleUrl: './ratings.scss'
+  templateUrl: './ratings.component.html',
+  styleUrl: './ratings.component.scss'
 })
-export class RatingsComponent implements OnInit {
+export class RatingsComponent implements OnInit, OnChanges {
   @Input() destinationId: string;
+
+  private ratingService = inject(RatingService);
+  private configState = inject(ConfigStateService);
+  private toaster = inject(ToasterService);
+  private confirmation = inject(ConfirmationService);
 
   ratings: RatingDto[] = [];
   averageRating: string = '0';
@@ -28,13 +32,14 @@ export class RatingsComponent implements OnInit {
     comment: ''
   };
 
-  constructor(
-    private ratingService: RatingService,
-    private configState: ConfigStateService,
-    private toaster: ToasterService,
-    private confirmation: ConfirmationService)
-  {
+  constructor() {
     this.currentUserId = this.configState.getDeep('currentUser.id');
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['destinationId'] && this.destinationId) {
+      this.loadRatings();
+    }
   }
 
   ngOnInit(): void {
@@ -45,13 +50,23 @@ export class RatingsComponent implements OnInit {
 
   loadRatings() {
     const destId = this.destinationId;
+    if (!destId) return;
 
     this.ratingService.getAverageRating(destId).subscribe(avg => {
       this.averageRating = avg.toFixed(1);
     });
 
     this.ratingService.getListByDestination(destId).subscribe(res => {
-      this.ratings = res;
+      let list = res.items;
+
+      const userRatingIndex = list.findIndex(r => r.userId === this.currentUserId);
+
+      if (userRatingIndex > 0) {
+        const userRating = list.splice(userRatingIndex, 1)[0];
+        list.unshift(userRating);
+      }
+
+      this.ratings = list;
     });
   }
 
@@ -98,6 +113,9 @@ export class RatingsComponent implements OnInit {
         error: (err) => this.toaster.error(err.error?.error?.message || 'Error al guardar', 'Error')
       });
     }
+  }
+  get hasUserAlreadyRated(): boolean {
+    return this.ratings.some(rat => rat.userId === this.currentUserId);
   }
 
   deleteRating(id: string) {

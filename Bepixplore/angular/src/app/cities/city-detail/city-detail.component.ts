@@ -3,8 +3,8 @@ import { CommonModule, Location } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '@abp/ng.core';
 import { ToasterService } from '@abp/ng.theme.shared';
-import { RatingsComponent } from '../ratings/ratings';
-import { TravelExperienceComponent } from '../experiences/travel-experience/travel-experience';
+import { RatingsComponent } from '../../ratings/ratings.component';
+import { TravelExperienceComponent } from '../../experiences/travel-experience/travel-experience.component';
 import { FavoriteService } from '@proxy/favorites';
 import { DestinationDto } from '@proxy/application/contracts/destinations';
 import { ActivatedRoute } from '@angular/router';
@@ -14,8 +14,8 @@ import { DestinationService } from '@proxy/destinations';
   selector: 'app-city-detail',
   standalone: true,
   imports: [CommonModule, RouterModule, RatingsComponent, TravelExperienceComponent],
-  templateUrl: './city-detail.html',
-  styleUrl: './city-detail.scss'
+  templateUrl: './city-detail.component.html',
+  styleUrl: './city-detail.component.scss'
 })
 export class CityDetailComponent implements OnInit {
   private router = inject(Router);
@@ -51,7 +51,7 @@ export class CityDetailComponent implements OnInit {
           },
           error: (err) => {
             console.error('No se encontró la ciudad en la DB', err);
-            this.router.navigate(['/destinations']);
+            this.router.navigate(['/cities']);
           }
         });
       } else {
@@ -89,7 +89,7 @@ export class CityDetailComponent implements OnInit {
 
     if (this.isFavorite) {
       if (this.city.id) {
-        this.favoriteService.remove(this.city.id).subscribe({
+        this.favoriteService.delete(this.city.id).subscribe({
           next: () => {
             this.isFavorite = false;
             this.toaster.info("Destino eliminado de favoritos");

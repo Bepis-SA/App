@@ -1,6 +1,5 @@
-import { authGuard, permissionGuard } from '@abp/ng.core';
+import { authGuard } from '@abp/ng.core';
 import { Routes } from '@angular/router';
-import { CityDetailComponent } from './city-detail/city-detail';
 
 export const APP_ROUTES: Routes = [
   {
@@ -26,24 +25,23 @@ export const APP_ROUTES: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'destinations', 
-    loadComponent: () => import('./destinations/destinations').then(m => m.Destinations),
+    path: 'favorites',
+    loadComponent: () => import('./favorites/favorites.component').then(m => m.FavoritesComponent),
+    canActivate: [authGuard],
   },
   {
-    path: 'destinations/details/:id', 
-    loadComponent: () => import('./city-detail/city-detail').then(m => m.CityDetailComponent),
+    path: 'cities/details/:id',
+    loadComponent: () => import('./cities/city-detail/city-detail.component').then(m => m.CityDetailComponent),
   },
   {
-    path: 'destinations/details',
-    component: CityDetailComponent,
+    path: 'cities/details',
+    loadComponent: () => import('./cities/city-detail/city-detail.component').then(m => m.CityDetailComponent),
   },
   {
-    path: 'destinations/details',
-    loadComponent: () =>
-      import('./city-detail/city-detail')
-        .then(m => m.CityDetailComponent), 
+    path: 'favorites/details/:id',
+    loadComponent: () => import('./cities/city-detail/city-detail.component').then(m => m.CityDetailComponent),
   },
-    {
+  {
     path: 'public-profile',
     loadChildren: () => import('./public-profile/public-profile.routes').then(c => c.PUBLIC_PROFILE_ROUTES),
     canActivate: [authGuard],

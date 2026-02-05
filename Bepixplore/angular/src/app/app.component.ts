@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { DynamicLayoutComponent } from '@abp/ng.core';
 import { LoaderBarComponent } from '@abp/ng.theme.shared';
 import { ReplaceableComponentsService } from '@abp/ng.core'; 
-import { eAccountComponents } from '@abp/ng.account'; // <--- Enum con los nombres de componentes
+import { eAccountComponents } from '@abp/ng.account'; 
 import { MyManageProfileComponent } from './account/my-manage-profile/my-manage-profile.component';
 
 @Component({

@@ -1,11 +1,7 @@
-﻿using Bepixplore.Experiences;
-using Bepixplore.Ratings;
-using Shouldly;
+﻿using Shouldly;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
-using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Modularity;
 using Volo.Abp.Users;
@@ -62,7 +58,8 @@ public abstract class TravelExperienceAppService_Tests<TStartupModule> : Bepixpl
         var destId = Guid.NewGuid();
         var myId = _currentUser.GetId();
 
-        await WithUnitOfWorkAsync(async () => {
+        await WithUnitOfWorkAsync(async () =>
+        {
             await _experienceRepository.InsertAsync(new TravelExperience(id, destId, myId, TravelRating.Neutral, "Original", DateTime.Now));
         });
 

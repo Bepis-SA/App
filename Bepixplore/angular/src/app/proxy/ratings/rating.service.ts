@@ -54,7 +54,7 @@ export class RatingService {
   
 
   getListByDestination = (destinationId: string, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, RatingDto[]>({
+    this.restService.request<any, PagedResultDto<RatingDto>>({
       method: 'GET',
       url: `/api/app/rating/by-destination/${destinationId}`,
     },

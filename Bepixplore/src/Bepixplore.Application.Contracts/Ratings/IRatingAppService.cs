@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -13,7 +12,7 @@ namespace Bepixplore.Ratings
         PagedAndSortedResultRequestDto,
         CreateUpdateRatingDto>
     {
-        Task<List<RatingDto>> GetListByDestinationAsync(Guid destinationId);
+        Task<PagedResultDto<RatingDto>> GetListByDestinationAsync(Guid destinationId);
         Task<double> GetAverageRatingAsync(Guid destinationId);
     }
 }

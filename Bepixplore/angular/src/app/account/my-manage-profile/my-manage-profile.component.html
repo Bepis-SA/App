@@ -1,184 +1,180 @@
-<div class="card shadow-sm">
-  <div class="card-header bg-white">
-    <ul class="nav nav-tabs card-header-tabs">
-      <li class="nav-item">
-        <a class="nav-link" [class.active]="selectedTab === 0" (click)="setTab(0)" href="javascript:void(0)">
-          <i class="fa fa-id-card me-2"></i>Datos Personales
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" [class.active]="selectedTab === 1" (click)="setTab(1)" href="javascript:void(0)">
-          <i class="fa fa-key me-2"></i>Contraseña
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-danger" [class.active]="selectedTab === 2" (click)="setTab(2)"
-          href="javascript:void(0)">
-          <i class="fa fa-trash me-2"></i>Botón de Baja
-        </a>
-      </li>
-    </ul>
-  </div>
-
-  <div class="card-body p-4">
-
-    @if (selectedTab === 0) {
-    <div>
-      <form [formGroup]="personalForm" (ngSubmit)="savePersonalData()">
-
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Usuario</label>
-            <input type="text" class="form-control bg-light" formControlName="userName" readonly>
-            <small class="text-muted">No editable</small>
-          </div>
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-control" formControlName="email">
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Nombre</label>
-            <input type="text" class="form-control" formControlName="name">
-          </div>
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Apellido</label>
-            <input type="text" class="form-control" formControlName="surname">
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Teléfono</label>
-            <input type="text" class="form-control" formControlName="phoneNumber">
-          </div>
-
-          <div class="col-md-6 mb-3">
-            <label class="form-label">URL Foto de Perfil</label>
-            <div class="input-group">
-              <span class="input-group-text"><i class="fa fa-image"></i></span>
-              <input type="text" class="form-control" formControlName="profilePictureUrl" placeholder="https://...">
-            </div>
-          </div>
-        </div>
-
-        <div class="card bg-light border-0 mb-4">
-          <div class="card-body">
-            <h6 class="card-title text-muted mb-3"><i class="fa fa-bell me-2"></i>Preferencias de Notificación</h6>
-
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Canal de Notificación</label>
-                <select class="form-select" formControlName="notificationChannel">
-                  <option [ngValue]="null">Selecciona...</option>
-                  <option [ngValue]="eNotificationChannel.Email">Email</option>
-                  <option [ngValue]="eNotificationChannel.Screen">Screen</option>
-                  <option [ngValue]="eNotificationChannel.Both">Both</option>
-                </select>
-              </div>
-
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Frecuencia</label>
-                <select class="form-select" formControlName="notificationFrequency">
-                  <option [ngValue]="null">Selecciona...</option>
-                  <option [ngValue]="eNotificationFrequency.Immediate">Immediate</option>
-                  <option [ngValue]="eNotificationFrequency.WeeklySummary">WeeklySummary</option>
-                </select>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-          <button type="submit" class="btn btn-primary px-4" [disabled]="loading || personalForm.invalid">
-            @if (loading) {
-            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-            Guardando...
-            } @else {
-            <i class="fa fa-save me-2"></i> Guardar Cambios
-            }
+<div class="profile-container">
+  
+  <div class="global-card">
+    <div class="card-header bg-white p-0">
+      
+      <ul class="nav-tabs">
+        <li class="nav-item">
+          <button class="nav-link" 
+                  [class.active]="selectedTab === 0" 
+                  (click)="setTab(0)">
+            <i class="fa fa-id-card me-2"></i> Datos Personales
           </button>
-        </div>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" 
+                  [class.active]="selectedTab === 1" 
+                  (click)="setTab(1)">
+            <i class="fa fa-key me-2"></i> Contraseña
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link text-danger" 
+                  [class.active]="selectedTab === 2" 
+                  (click)="setTab(2)">
+            <i class="fa fa-trash me-2"></i> Botón de Baja
+          </button>
+        </li>
+      </ul>
 
-      </form>
     </div>
-    }
 
-    @if (selectedTab === 1) {
-    <div>
-      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+    <div class="card-body">
 
-        <div class="mb-3">
-          <label class="form-label">Contraseña Actual</label>
-          <input type="password" class="form-control" formControlName="currentPassword"
-            placeholder="Escribe tu contraseña actual">
-        </div>
+      @if (selectedTab === 0) {
+        <form [formGroup]="personalForm" (ngSubmit)="savePersonalData()">
+          
+          <div class="profile-grid">
+            <div class="mb-3">
+              <label class="form-label">Usuario</label>
+              <input type="text" class="form-control" formControlName="userName" readonly style="background-color: #e9ecef;">
+              <small class="text-muted">No editable</small>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" formControlName="email">
+            </div>
 
-        <div class="mb-3">
-          <label class="form-label">Nueva Contraseña</label>
-          <input type="password" class="form-control" formControlName="newPassword" placeholder="Mínimo 6 caracteres">
-        </div>
+            <div class="mb-3">
+              <label class="form-label">Nombre</label>
+              <input type="text" class="form-control" formControlName="name">
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Apellido</label>
+              <input type="text" class="form-control" formControlName="surname">
+            </div>
 
-        <div class="mb-4">
-          <label class="form-label">Confirmar Nueva Contraseña</label>
-          <input type="password" class="form-control" formControlName="confirmNewPassword"
-            placeholder="Repite la nueva contraseña">
-        </div>
+            <div class="mb-3">
+              <label class="form-label">Teléfono</label>
+              <input type="text" class="form-control" formControlName="phoneNumber">
+            </div>
 
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <button type="submit" class="btn btn-primary px-4" [disabled]="loading || passwordForm.invalid">
-          @if (loading) {
-          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-          Procesando...
-          } @else {
-          <i class="fa fa-lock me-2"></i> Cambiar Contraseña
-          }
-        </button>
-        </div>
-
-      </form>
-    </div>
-    }
-
-    @if (selectedTab === 2) {
-    <div>
-      <div class="container pt-3">
-
-        <h4>Zona de Peligro</h4>
-        <p class="text-muted">
-          La eliminación de tu cuenta es una acción irreversible. Perderás el acceso a todos tus datos, historial y tu
-          perfil público dejará de ser visible para otros turistas.
-        </p>
-
-        <div class="card border-danger mt-4">
-          <div class="card-header bg-danger text-white d-flex align-items-center py-2 fw-bold">
-            <i class="fa fa-exclamation-triangle me-2"></i> Acción Irreversible
+            <div class="mb-3">
+              <label class="form-label">URL Foto de Perfil</label>
+              <div class="input-group-custom">
+                <span class="input-group-text"><i class="fa fa-image"></i></span>
+                <input type="text" class="form-control" formControlName="profilePictureUrl" placeholder="https://...">
+              </div>
+            </div>
           </div>
-          <div class="card-body">
-            <h5 class="card-title text-danger">Eliminar Cuenta</h5>
-            <p class="card-text">
-              Si estás seguro de que quieres abandonar la plataforma, haz clic en el botón de abajo.
-            </p>
 
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button class="btn btn-danger" (click)="deleteAccount()" [disabled]="loading">
+          <div class="global-card bg-light shadow-none mt-4 border-0">
+            <div class="card-body">
+              <h6 class="text-muted mb-3">
+                <i class="fa fa-bell me-2"></i> Preferencias de Notificación
+              </h6>
+              
+              <div class="profile-grid">
+                <div class="mb-3">
+                  <label class="form-label">Canal de Notificación</label>
+                  <select class="form-select" formControlName="notificationChannel">
+                    <option [ngValue]="eNotificationChannel.Email">
+                      {{ 'Bepixplore::Enum:NotificationChannel:Email' | abpLocalization }}
+                    </option>
+                    <option [ngValue]="eNotificationChannel.Screen">
+                      {{ 'Bepixplore::Enum:NotificationChannel:Screen' | abpLocalization }}
+                    </option>
+                    <option [ngValue]="eNotificationChannel.Both">
+                      {{ 'Bepixplore::Enum:NotificationChannel:Both' | abpLocalization }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Frecuencia</label>
+                  <select class="form-select" formControlName="notificationFrequency">
+                    <option [ngValue]="eNotificationFrequency.Immediate"> {{ 'Bepixplore::Enum:NotificationFrequency:Immediate' | abpLocalization }} </option>
+                    <option [ngValue]="eNotificationFrequency.WeeklySummary"> {{ 'Bepixplore::Enum:NotificationFrequency:WeeklySummary' | abpLocalization }} </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end mt-3">
+            <button type="submit" class="btn btn-primary px-4" [disabled]="loading || personalForm.invalid">
               @if (loading) {
-              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-              Eliminando...
+                <span class="spinner-border spinner-sm me-2"></span> Guardando...
               } @else {
-              <i class="fa fa-trash me-2"></i> Eliminar mi cuenta permanentemente
+                <i class="fa fa-save me-2"></i> Guardar Cambios
               }
             </button>
+          </div>
+        </form>
+      }
+
+      @if (selectedTab === 1) {
+        <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+          <div class="mb-3">
+            <label class="form-label">Contraseña Actual</label>
+            <input type="password" class="form-control" formControlName="currentPassword" placeholder="Escribe tu contraseña actual">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Nueva Contraseña</label>
+            <input type="password" class="form-control" formControlName="newPassword" placeholder="Mínimo 6 caracteres">
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Confirmar Nueva Contraseña</label>
+            <input type="password" class="form-control" formControlName="confirmNewPassword" placeholder="Repite la nueva contraseña">
+          </div>
+
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary px-4" [disabled]="loading || passwordForm.invalid">
+              @if (loading) {
+                <span class="spinner-border spinner-sm me-2"></span> Procesando...
+              } @else {
+                <i class="fa fa-lock me-2"></i> Cambiar Contraseña
+              }
+            </button>
+          </div>
+        </form>
+      }
+
+      @if (selectedTab === 2) {
+        <div class="danger-zone pt-3">
+          <h4>Zona de Peligro</h4>
+          <p class="text-muted">
+            La eliminación de tu cuenta es una acción irreversible. Perderás el acceso a todos tus datos, historial y tu perfil público dejará de ser visible para otros turistas.
+          </p>
+
+          <div class="global-card border-danger mt-4">
+            <div class="card-header bg-danger text-white d-flex align-items-center fw-bold">
+              <i class="fa fa-exclamation-triangle me-2"></i> Acción Irreversible
+            </div>
+            <div class="card-body">
+              <h5 class="text-danger mb-2">Eliminar Cuenta</h5>
+              <p class="mb-3">
+                Si estás seguro de que quieres abandonar la plataforma, haz clic en el botón de abajo.
+              </p>
+              
+              <div class="d-flex justify-content-end">
+                <button class="btn btn-danger" (click)="deleteAccount()" [disabled]="loading">
+                  @if (loading) {
+                    <span class="spinner-border spinner-sm me-2"></span> Eliminando...
+                  } @else {
+                    <i class="fa fa-trash me-2"></i> Eliminar mi cuenta permanentemente
+                  }
+                </button>
+              </div>
             </div>
           </div>
         </div>
+      }
 
-      </div>
     </div>
-    }
-
   </div>
 </div>
