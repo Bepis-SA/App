@@ -1,14 +1,12 @@
 ﻿using Bepixplore;
-using Bepixplore.Notifications;
 using Bepixplore.Favorites;
+using Bepixplore.Notifications;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Repositories;
-using Volo.Abp.Guids;
-using Volo.Abp.ObjectMapping;
 using Volo.Abp.Users;
 
 [Authorize]

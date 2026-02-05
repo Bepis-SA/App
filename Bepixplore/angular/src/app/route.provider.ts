@@ -26,7 +26,7 @@ function configureRoutes() {
     },
     {
       path: '/favorites',
-      name: 'Mis Destinos',
+      name: '::Menu:Favorites',
       iconClass: 'fas fa-heart',
       order: 3,
       layout: eLayoutType.application,

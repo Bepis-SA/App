@@ -1728,7 +1728,7 @@
                   }
                 },
                 {
-                  "name": "RemoveAsync",
+                  "name": "DeleteAsync",
                   "parametersOnMethod": [
                     {
                       "name": "destinationId",
@@ -1793,9 +1793,9 @@
               "allowAnonymous": null,
               "implementFrom": "Bepixplore.Favorites.IFavoriteAppService"
             },
-            "RemoveAsyncByDestinationId": {
-              "uniqueName": "RemoveAsyncByDestinationId",
-              "name": "RemoveAsync",
+            "DeleteAsyncByDestinationId": {
+              "uniqueName": "DeleteAsyncByDestinationId",
+              "name": "DeleteAsync",
               "httpMethod": "DELETE",
               "url": "api/app/favorite",
               "supportedVersions": [],

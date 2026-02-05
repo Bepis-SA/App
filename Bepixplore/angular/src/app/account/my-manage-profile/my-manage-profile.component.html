@@ -80,19 +80,23 @@
                 <div class="mb-3">
                   <label class="form-label">Canal de Notificación</label>
                   <select class="form-select" formControlName="notificationChannel">
-                    <option [ngValue]="null">Selecciona...</option>
-                    <option [ngValue]="eNotificationChannel.Email">Email</option>
-                    <option [ngValue]="eNotificationChannel.Screen">Screen</option>
-                    <option [ngValue]="eNotificationChannel.Both">Both</option>
+                    <option [ngValue]="eNotificationChannel.Email">
+                      {{ 'Bepixplore::Enum:NotificationChannel:Email' | abpLocalization }}
+                    </option>
+                    <option [ngValue]="eNotificationChannel.Screen">
+                      {{ 'Bepixplore::Enum:NotificationChannel:Screen' | abpLocalization }}
+                    </option>
+                    <option [ngValue]="eNotificationChannel.Both">
+                      {{ 'Bepixplore::Enum:NotificationChannel:Both' | abpLocalization }}
+                    </option>
                   </select>
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label">Frecuencia</label>
                   <select class="form-select" formControlName="notificationFrequency">
-                    <option [ngValue]="null">Selecciona...</option>
-                    <option [ngValue]="eNotificationFrequency.Immediate">Immediate</option>
-                    <option [ngValue]="eNotificationFrequency.WeeklySummary">WeeklySummary</option>
+                    <option [ngValue]="eNotificationFrequency.Immediate"> {{ 'Bepixplore::Enum:NotificationFrequency:Immediate' | abpLocalization }} </option>
+                    <option [ngValue]="eNotificationFrequency.WeeklySummary"> {{ 'Bepixplore::Enum:NotificationFrequency:WeeklySummary' | abpLocalization }} </option>
                   </select>
                 </div>
               </div>

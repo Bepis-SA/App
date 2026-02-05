@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { AuthService, LocalizationPipe } from '@abp/ng.core';
+import { AuthService } from '@abp/ng.core';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  imports: [LocalizationPipe]
+  standalone: true,
 })
 export class HomeComponent {
   private authService = inject(AuthService);

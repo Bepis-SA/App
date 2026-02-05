@@ -103,12 +103,12 @@ namespace Bepixplore.ExternalServices.GeoDb
             var guidGeneratorMock = Substitute.For<IGuidGenerator>();
 
             var service = new GeoDbCitySearchService(
-                asyncExecuterMock, 
-                destinationRepoMock, 
-                favoriteRepoMock,   
-                failingHttpClient, 
+                asyncExecuterMock,
+                destinationRepoMock,
+                favoriteRepoMock,
+                failingHttpClient,
                 apiMetricRepositoryMock,
-                guidGeneratorMock 
+                guidGeneratorMock
             );
 
             var request = new CitySearchRequestDto { PartialName = "Cor", IsPopularFilter = false };
@@ -181,7 +181,6 @@ namespace Bepixplore.ExternalServices.GeoDb
 
             tokyo.ShouldNotBeNull();
             tokyo.Country.ShouldNotBeNullOrWhiteSpace();
-
             tokyo.Latitude.ShouldBeInRange(20.0f, 45.0f);
             tokyo.Longitude.ShouldBeInRange(120.0f, 150.0f);
         }

@@ -1,5 +1,5 @@
 .ratings-container {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 
 .summary-card {
@@ -50,7 +50,6 @@
   }
 }
 
-/* Importante: Definimos text-secondary explícitamente para las estrellas vacías */
 .text-secondary {
   color: var(--secondary) !important;
 }

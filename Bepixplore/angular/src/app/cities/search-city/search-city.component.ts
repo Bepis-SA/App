@@ -143,11 +143,15 @@ export class SearchCityComponent implements OnInit, OnDestroy {
 
     this.destinationService.create(cityInput as any).subscribe({
       next: (res: any) => {
-        this.router.navigate(['/destinations/details'], { state: { data: res } });
+        this.router.navigate(['/cities/details', res.id], { 
+          state: { data: res } 
+        });
       },
       error: (err) => {
         console.error('Error al preparar el destino:', err);
-        this.router.navigate(['/destinations/details'], { state: { data: city } });
+        this.router.navigate(['/cities/details'], { 
+          state: { data: city } 
+        });
       }
     });
   }

@@ -3,18 +3,22 @@ import { ConfigStateService } from '@abp/ng.core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component, Input, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
-
 import { ToasterService, ConfirmationService, Confirmation } from '@abp/ng.theme.shared';
 
 @Component({
   selector: 'app-ratings',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './ratings.html',
-  styleUrl: './ratings.scss'
+  templateUrl: './ratings.component.html',
+  styleUrl: './ratings.component.scss'
 })
 export class RatingsComponent implements OnInit, OnChanges {
   @Input() destinationId: string;
+
+  private ratingService = inject(RatingService);
+  private configState = inject(ConfigStateService);
+  private toaster = inject(ToasterService);
+  private confirmation = inject(ConfirmationService);
 
   ratings: RatingDto[] = [];
   averageRating: string = '0';
@@ -28,15 +32,9 @@ export class RatingsComponent implements OnInit, OnChanges {
     comment: ''
   };
 
-  constructor(
-    private ratingService: RatingService,
-    private configState: ConfigStateService,
-    private toaster: ToasterService,
-    private confirmation: ConfirmationService)
-  {
+  constructor() {
     this.currentUserId = this.configState.getDeep('currentUser.id');
   }
-
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['destinationId'] && this.destinationId) {

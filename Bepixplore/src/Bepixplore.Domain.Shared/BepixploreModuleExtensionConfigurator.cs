@@ -73,44 +73,27 @@ public static class BepixploreModuleExtensionConfigurator
             {
                 identity.ConfigureUser(user =>
                 {
-                    // Profile Picture
                     user.AddOrUpdateProperty<string>(
                         "ProfilePictureUrl",
                         property =>
                         {
-                            // Validation Rules
                             property.Attributes.Add(new StringLengthAttribute(500));
-
-                            // UI Configurations
-                            property.UI.OnEditForm.IsVisible = true;
-                            property.UI.OnCreateForm.IsVisible = true;
-                            property.UI.OnTable.IsVisible = true;
-
                         }
                     );
 
-                    // Notification Channel
                     user.AddOrUpdateProperty<NotificationChannel>(
                         "NotificationChannel",
                         property =>
                         {
                             property.Attributes.Add(new RequiredAttribute());
-
-                            property.DefaultValue = NotificationChannel.Email;
-                            property.UI.OnEditForm.IsVisible = true;
                         }
                     );
 
-                    // Notification Frequency
                     user.AddOrUpdateProperty<NotificationFrequency>(
                         "NotificationFrequency",
                         property =>
                         {
                             property.Attributes.Add(new RequiredAttribute());
-                            property.DefaultValue = NotificationFrequency.Immediate;
-
-                            property.UI.OnEditForm.IsVisible = true;
-                            property.UI.OnCreateForm.IsVisible = true;
                         }
                     );
                 });

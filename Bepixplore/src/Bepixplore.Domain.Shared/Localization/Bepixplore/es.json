@@ -39,6 +39,7 @@
     "TakePhoto": "Tomar foto",
     "ChoosePhoto": "Escoge una foto",
     "Menu:Cities": "Ciudades",
+    "Menu:Favorites": "Mis Destinos",
     "CitySearch:Title": "Buscar ciudades",
     "CitySearch:Placeholder": "Escribe el nombre de una ciudad...",
     "CitySearch:Loading": "Buscando ciudades...",
@@ -51,6 +52,16 @@
     "DeleteAccount": "Eliminar cuenta",
     "Permission:Sistema": "Sistema de Control",
     "Permission:Metrics": "Métricas",
-    "Permission:Metrics.Admin": "Administración de Métricas"
+    "Permission:Metrics.Admin": "Administración de Métricas",
+    "Enum:NotificationChannel:Email": "Correo Electrónico",
+    "Enum:NotificationChannel:Screen": "Pantalla",
+    "Enum:NotificationChannel:Both": "Ambos canales",
+    "Enum:NotificationFrequency:Immediate": "Inmediata",
+    "Enum:NotificationFrequency:WeeklySummary": "Resumen Semanal",
+    "Email": "Correo Electrónico",
+    "Screen": "Pantalla",
+    "Both": "Ambos canales",
+    "Immediate": "Inmediata",
+    "WeeklySummary": "Resumen Semanal"
   }
 }

@@ -58,7 +58,7 @@ namespace Bepixplore.Favorites
             return ObjectMapper.Map<Destination, DestinationDto>(destination);
         }
 
-        public async Task RemoveAsync(Guid destinationId)
+        public async Task DeleteAsync(Guid destinationId)
         {
             var userId = CurrentUser.GetId();
             var favorite = await _favoriteRepository.FirstOrDefaultAsync(x =>

@@ -153,7 +153,6 @@
 
 .bg-popular {
   background-color: #fd7e14 !important;
-  /* Color naranja fuego */
   transition: background-color 0.3s ease;
 }
 
@@ -180,7 +179,6 @@
   }
 }
 
-/* Mejora para las tarjetas en modo popular */
 .is-popular-active .city-result-card {
   border: 1px solid rgba(253, 126, 20, 0.2);
 }
