@@ -2,6 +2,7 @@ using Bepixplore.EntityFrameworkCore;
 using Bepixplore.HealthChecks;
 using Bepixplore.MultiTenancy;
 using Bepixplore.Ratings;
+using Bepixplore.BackgroundWorkers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Extensions.DependencyInjection;
@@ -28,6 +29,7 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite.Bundling;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
+using Volo.Abp.BackgroundWorkers;
 using Volo.Abp.Modularity;
 using Volo.Abp.OpenIddict;
 using Volo.Abp.Security.Claims;
@@ -296,5 +298,6 @@ public class BepixploreHttpApiHostModule : AbpModule
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
         app.UseConfiguredEndpoints();
+        context.AddBackgroundWorkerAsync<EventCheckerWorker>();
     }
 }

@@ -54,11 +54,11 @@ namespace Bepixplore.Destinations
 
         public override async Task<DestinationDto> UpdateAsync(Guid id, CreateUpdateDestinationDto input)
         {
-            var destinationDto = await base.UpdateAsync(id, input);
+            var destination = await base.UpdateAsync(id, input);
 
-            await _notificationAppService.NotifyDestinationUpdateAsync(id, destinationDto.Name);
+            await _notificationAppService.NotifyDestinationUpdateAsync(id, destination.Name);
 
-            return destinationDto;
+            return destination;
         }
     }
 }

@@ -2,7 +2,8 @@
 {
     public enum NotificationType
     {
-        DestinationUpdate = 1,
-        System = 2
+        DestinationUpdate = 0,
+        NewEvent = 1,
+        Comment = 2
     }
 }
