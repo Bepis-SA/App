@@ -1,15 +1,18 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Bepixplore.Destinations;
+using Bepixplore.Notifications;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Authorization;
+using Volo.Abp.Data;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Users;
-using System.Linq;
-using Volo.Abp.Data;
 
 namespace Bepixplore.Ratings
 {
@@ -25,14 +28,20 @@ namespace Bepixplore.Ratings
     {
         private readonly ICurrentUser _currentUser;
         private readonly IDataFilter _dataFilter;
+        private readonly INotificationAppService _notificationAppService;
+        private readonly IRepository<Destination, Guid> _destinationRepository;
 
         public RatingAppService(
         IRepository<Rating, Guid> repository,
         ICurrentUser currentUser,
-        IDataFilter dataFilter) : base(repository)
+        IDataFilter dataFilter,
+        INotificationAppService notificationAppService,
+        IRepository<Destination, Guid> destinationRepository) : base(repository)
         {
             _currentUser = currentUser;
             _dataFilter = dataFilter;
+            _notificationAppService = notificationAppService;
+            _destinationRepository = destinationRepository;
         }
 
         [Authorize]
@@ -48,13 +57,30 @@ namespace Bepixplore.Ratings
 
             if (existingRating != null)
             {
-                throw new UserFriendlyException("Ya has calificado este destino. Solo se permite una calificación por usuario.");
+                throw new UserFriendlyException("Ya has calificado este destino...");
             }
 
             var newRating = ObjectMapper.Map<CreateUpdateRatingDto, Rating>(input);
             newRating.UserId = currentUserId;
 
             await Repository.InsertAsync(newRating, autoSave: true);
+
+            try
+            {
+                var destination = await _destinationRepository.GetAsync(input.DestinationId);
+
+                await _notificationAppService.NotifyNewRatingAsync(
+                    destination.Id,
+                    destination.Name,
+                    newRating.Score,
+                    _currentUser.Name ?? "Un viajero"
+                );
+            }
+            catch (Exception ex)
+            {
+                Logger.LogWarning("No se pudo enviar la notificación de rating: " + ex.Message);
+            }
+
             return ObjectMapper.Map<Rating, RatingDto>(newRating);
         }
 
