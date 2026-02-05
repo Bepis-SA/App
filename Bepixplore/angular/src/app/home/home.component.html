@@ -1,0 +1,46 @@
+<div class="home-container">
+
+  <div class="bg-image"></div>
+  <div class="bg-overlay"></div>
+
+  <div class="content-wrapper container d-flex align-items-center justify-content-center h-100">
+
+    <div class="glass-card text-center p-5 animate-up">
+
+      <h1 class="app-title mb-3">Bepixplore</h1>
+
+      <p class="app-description text-muted mb-4">
+        Descubre, conecta y gestiona tus próximas aventuras.
+        La plataforma definitiva para el turista moderno.
+      </p>
+
+      <div class="d-flex flex-column align-items-center gap-3">
+
+        @if (!hasLoggedIn) {
+        <button class="btn btn-primary btn-lg btn-pill px-5 pulse-animation" (click)="login()">
+          <i class="fa fa-paper-plane me-2"></i> Comenzar la Aventura
+        </button>
+        <p class="small text-muted mt-2">Inicia sesión para acceder a tu perfil</p>
+        }
+
+        @if (hasLoggedIn) {
+        <div class="welcome-badge mb-3">
+          <span class="badge bg-success rounded-pill px-3 py-2">
+            <i class="fa fa-user-check me-1"></i> Sesión Iniciada
+          </span>
+        </div>
+        <p class="lead fw-normal text-body">¡Bienvenido de nuevo, viajero!</p>
+        }
+
+        <hr class="w-50 my-3 border-secondary opacity-25">
+
+        <a href="https://github.com/Bepis-SA/App" target="_blank" class="github-link">
+          <i class="fa fa-github fs-4"></i>
+          <span class="ms-2">Ver código en GitHub</span>
+        </a>
+
+      </div>
+    </div>
+
+  </div>
+</div>
