@@ -18,16 +18,17 @@ public class TicketMasterAppService : BepixploreAppService, ITicketMasterAppServ
     private readonly IConfiguration _configuration;
     private readonly IRepository<ApiMetric, Guid> _apiMetricRepository;
     private readonly IGuidGenerator _guidGenerator;
+    private readonly ILogger<TicketMasterAppService> _logger;
 
     public TicketMasterAppService(IHttpClientFactory httpClientFactory, IConfiguration configuration, IRepository<ApiMetric, Guid> apiMetricRepository, // <--- Inyectar esto
-    IGuidGenerator guidGenerator)
+    IGuidGenerator guidGenerator, ILogger<TicketMasterAppService> logger)
     {
         _httpClientFactory = httpClientFactory;
         _configuration = configuration;
         _apiMetricRepository = apiMetricRepository;
         _guidGenerator = guidGenerator;
+        _logger = logger;
     }
-
 
     public async Task<List<TicketMasterEventDto>> GetEventsByCityAsync(string cityName)
     {
@@ -63,7 +64,7 @@ public class TicketMasterAppService : BepixploreAppService, ITicketMasterAppServ
         {
             isSuccess = false;
             errorMessage = "Excepción en TicketMaster: " + ex.Message;
-            Logger.LogError(ex, errorMessage);
+            _logger.LogError(ex, errorMessage);
         }
         finally
         {
@@ -77,8 +78,8 @@ public class TicketMasterAppService : BepixploreAppService, ITicketMasterAppServ
 
                 await _apiMetricRepository.InsertAsync(new ApiMetric(
                     _guidGenerator.Create(),
-                    "TicketMaster",           
-                    "/discovery/v2/events", 
+                    "TicketMaster",
+                    "/discovery/v2/events",
                     isSuccess,
                     (int)stopwatch.ElapsedMilliseconds,
                     safeErrorMessage

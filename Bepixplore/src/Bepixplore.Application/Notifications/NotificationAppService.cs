@@ -1,11 +1,9 @@
-﻿using Bepixplore;
+﻿using Bepixplore.Destinations;
 using Bepixplore.Favorites;
-using Bepixplore.Notifications;
-using Bepixplore.Destinations;
 using Microsoft.AspNetCore.Authorization;
-using System.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Repositories;
@@ -13,8 +11,6 @@ using Volo.Abp.Users;
 
 namespace Bepixplore.Notifications
 {
-    // No ponemos [Authorize] a nivel de clase para que el Worker (TicketMaster) 
-    // pueda llamar a los métodos de creación internamente.
     public class NotificationAppService : BepixploreAppService, INotificationAppService
     {
         private readonly IRepository<Notification, Guid> _notificationRepository;
@@ -49,7 +45,7 @@ namespace Bepixplore.Notifications
                 throw new UserFriendlyException("No tienes permiso para marcar esta notificación.");
             }
 
-            notification.IsRead = true; 
+            notification.IsRead = true;
             await _notificationRepository.UpdateAsync(notification);
         }
 
@@ -82,7 +78,6 @@ namespace Bepixplore.Notifications
                 ));
             }
         }
-
         public async Task NotifyNewEventAsync(string cityName, string eventName, string venueName, string startDate)
         {
             var destinationIds = (await _destinationRepository.GetListAsync(d => d.City == cityName))
@@ -113,7 +108,6 @@ namespace Bepixplore.Notifications
                 ));
             }
         }
-
         public async Task NotifyDestinationUpdateAsync(Guid destinationId, string destinationName)
         {
             var favorites = await _favoriteRepository.GetListAsync(f => f.DestinationId == destinationId);

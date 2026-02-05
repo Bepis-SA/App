@@ -12,7 +12,7 @@ namespace Bepixplore.Notifications
         public NotificationType Type { get; set; }
         public DateTime CreationTime { get; set; }
 
-        protected Notification() { }
+        private Notification() { }
 
         public Notification(Guid id, Guid userId, string title, string message, NotificationType type)
             : base(id)

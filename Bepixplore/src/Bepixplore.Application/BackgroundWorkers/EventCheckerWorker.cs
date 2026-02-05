@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Bepixplore.Destinations;
+﻿using Bepixplore.Destinations;
 using Bepixplore.Events;
 using Bepixplore.Notifications;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Volo.Abp.BackgroundWorkers;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Threading;
@@ -16,7 +16,7 @@ public class EventCheckerWorker : AsyncPeriodicBackgroundWorkerBase
 {
     public EventCheckerWorker(AbpAsyncTimer timer, IServiceScopeFactory serviceScopeFactory)
         : base(timer, serviceScopeFactory)
-    {   //ACA CAMBIAS CADA CUANTO BUSCA LOS EVENTOS, EL TP DICE EJ:24HRS
+    {   // Modificar la verificacion periodica, TP:24HRS=86400000MS
         Timer.Period = 6000;
     }
 

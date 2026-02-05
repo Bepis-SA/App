@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Bepixplore.Favorites;
+using System;
 using System.Threading.Tasks;
-using Bepixplore.Favorites;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Services;
 
@@ -20,7 +19,6 @@ public class NotificationManager : DomainService
         _favoriteRepository = favoriteRepository;
     }
 
-    // Este método centraliza la lógica que ya tenías
     public async Task CreateFavoriteNotificationsAsync(
         Guid destinationId,
         string title,
