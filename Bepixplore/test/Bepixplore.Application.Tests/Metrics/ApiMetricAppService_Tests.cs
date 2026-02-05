@@ -1,5 +1,4 @@
-﻿using Bepixplore.Metrics;
-using Shouldly;
+﻿using Shouldly;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,11 +44,7 @@ public abstract class ApiMetricAppService_Tests<TStartupModule> : BepixploreAppl
         geoDbStats.TotalCalls.ShouldBe(4);
         geoDbStats.SuccessfulCalls.ShouldBe(2);
         geoDbStats.FailedCalls.ShouldBe(2);
-
-        // El promedio de (100+200+50+50) / 4 = 100ms
         geoDbStats.AverageResponseTime.ShouldBe(100);
-
-        // La tasa de éxito es 50%
         geoDbStats.SuccessRate.ShouldBe(50);
     }
 }

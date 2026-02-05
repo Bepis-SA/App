@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToasterService } from '@abp/ng.theme.shared';
-import { RestService, AuthService } from '@abp/ng.core';
+import { RestService, AuthService, CoreModule } from '@abp/ng.core';
 import { UserService } from '../../proxy/users';
 import { UserProfileDto, NotificationChannel, NotificationFrequency } from '../../account/models/user-profile.dto';
 
@@ -11,7 +11,8 @@ import { UserProfileDto, NotificationChannel, NotificationFrequency } from '../.
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule, 
+    CoreModule
   ],
   templateUrl: './my-manage-profile.component.html',
   styleUrls: ['./my-manage-profile.component.scss']

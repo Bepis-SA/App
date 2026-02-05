@@ -1,12 +1,8 @@
 import { Component, OnInit, OnChanges, SimpleChanges, Input, inject } from '@angular/core';
-import { CommonModule, Location } from '@angular/common'; // Location
+import { CommonModule, Location } from '@angular/common'; 
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ConfigStateService } from '@abp/ng.core';
-
-import { ToasterService, ConfirmationService, Confirmation } from '@abp/ng.theme.shared'; // notificaciones
-
-import { DestinationService } from '../../proxy/destinations/destination.service';
+import { ToasterService, ConfirmationService, Confirmation } from '@abp/ng.theme.shared'; 
 import { TravelExperienceService } from '../../proxy/experiences/travel-experience.service';
 import { TravelExperienceDto, CreateUpdateTravelExperienceDto } from '../../proxy/experiences/models';
 export interface GetTravelExperienceListDto {
@@ -22,23 +18,21 @@ export interface GetTravelExperienceListDto {
   selector: 'app-travel-experience',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './travel-experience.html',
-  styleUrls: ['./travel-experience.scss']
+  templateUrl: './travel-experience.component.html',
+  styleUrls: ['./travel-experience.component.scss']
 })
-export class TravelExperienceComponent implements OnInit {
+export class TravelExperienceComponent implements OnInit, OnChanges {
   @Input() destinationId: string;
+  @Input() cityName: string;
 
-  private readonly destinationService = inject(DestinationService);
-  readonly router = inject(Router);
   private readonly location = inject(Location);
-
   private readonly toaster = inject(ToasterService);
   private readonly confirmation = inject(ConfirmationService);
+  private readonly experienceService = inject(TravelExperienceService);
+  private readonly configState = inject(ConfigStateService);
 
   isEditing = false;
   editingId: string | null = null;
-
-  city: any;
   experiences: TravelExperienceDto[] = [];
   keyword: string = '';
   selectedRating: number | null = null;
@@ -50,10 +44,7 @@ export class TravelExperienceComponent implements OnInit {
     travelDate: new Date().toISOString()
   };
 
-  constructor(
-    private experienceService: TravelExperienceService,
-    private configState: ConfigStateService
-  ) {
+  constructor() {
     this.currentUserId = this.configState.getDeep('currentUser.id');
   }
 
@@ -64,9 +55,7 @@ export class TravelExperienceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.city = history.state.data;
-
-    if (this.destinationId || (this.city && (this.city.id || this.city.destinationId))) {
+    if (this.destinationId) {
       this.getExperiences();
     }
   }
@@ -102,7 +91,7 @@ export class TravelExperienceComponent implements OnInit {
   }
 
   getExperiences() {
-    const cityId = this.destinationId || this.city?.id || this.city?.destinationId;
+    const cityId = this.destinationId;
     if (!cityId) return;
 
     const input: GetTravelExperienceListDto = {
@@ -130,7 +119,7 @@ export class TravelExperienceComponent implements OnInit {
   }
 
   saveReview() {
-    const cityId = this.destinationId || this.city?.id;
+    const cityId = this.destinationId;
     const input = { ...this.newReview, destinationId: cityId } as any;
 
     if (this.isEditing && this.editingId) {

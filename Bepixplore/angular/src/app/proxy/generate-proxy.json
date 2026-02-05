@@ -1626,113 +1626,81 @@
             }
           }
         },
-        "Bepixplore.Favorites.FavoriteAppService": {
-          "controllerName": "Favorite",
-          "controllerGroupName": "Favorite",
-        "Bepixplore.Users.UserAppService": {
-          "controllerName": "User",
-          "controllerGroupName": "User",
+        "Bepixplore.External.GeoDb.GeoDbCitySearchService": {
+          "controllerName": "GeoDbCitySearch",
+          "controllerGroupName": "GeoDbCitySearch",
           "isRemoteService": true,
           "isIntegrationService": false,
           "apiVersion": null,
-          "type": "Bepixplore.Users.UserAppService",
+          "type": "Bepixplore.External.GeoDb.GeoDbCitySearchService",
           "interfaces": [
             {
-              "type": "Bepixplore.Users.IUserAppService",
-              "name": "IUserAppService",
+              "type": "Bepixplore.Cities.ICitySearchService",
+              "name": "ICitySearchService",
               "methods": [
                 {
-                  "name": "GetPublicProfileAsync",
+                  "name": "SearchCitiesAsync",
                   "parametersOnMethod": [
                     {
-                      "name": "userName",
-                      "typeAsString": "System.String, System.Private.CoreLib",
-                      "type": "System.String",
-                      "typeSimple": "string",
+                      "name": "request",
+                      "typeAsString": "Bepixplore.Cities.CitySearchRequestDto, Bepixplore.Application.Contracts",
+                      "type": "Bepixplore.Cities.CitySearchRequestDto",
+                      "typeSimple": "Bepixplore.Cities.CitySearchRequestDto",
                       "isOptional": false,
                       "defaultValue": null
                     }
                   ],
                   "returnValue": {
-                    "type": "Bepixplore.Users.PublicUserProfileDto",
-                    "typeSimple": "Bepixplore.Users.PublicUserProfileDto"
-                  }
-                },
-                {
-                  "name": "DeleteMyAccountAsync",
-                  "parametersOnMethod": [],
-                  "returnValue": {
-                    "type": "System.Void",
-                    "typeSimple": "System.Void"
+                    "type": "Bepixplore.Cities.CitySearchResultDto",
+                    "typeSimple": "Bepixplore.Cities.CitySearchResultDto"
                   }
                 }
               ]
             }
           ],
           "actions": {
-            "GetPublicProfileAsyncByUserName": {
-              "uniqueName": "GetPublicProfileAsyncByUserName",
-              "name": "GetPublicProfileAsync",
-              "httpMethod": "GET",
-              "url": "api/app/user/public-profile",
+            "SearchCitiesAsyncByRequest": {
+              "uniqueName": "SearchCitiesAsyncByRequest",
+              "name": "SearchCitiesAsync",
+              "httpMethod": "POST",
+              "url": "api/app/geo-db-city-search/search-cities",
               "supportedVersions": [],
               "parametersOnMethod": [
                 {
-                  "name": "userName",
-                  "typeAsString": "System.String, System.Private.CoreLib",
-                  "type": "System.String",
-                  "typeSimple": "string",
+                  "name": "request",
+                  "typeAsString": "Bepixplore.Cities.CitySearchRequestDto, Bepixplore.Application.Contracts",
+                  "type": "Bepixplore.Cities.CitySearchRequestDto",
+                  "typeSimple": "Bepixplore.Cities.CitySearchRequestDto",
                   "isOptional": false,
                   "defaultValue": null
                 }
               ],
               "parameters": [
                 {
-                  "nameOnMethod": "userName",
-                  "name": "userName",
+                  "nameOnMethod": "request",
+                  "name": "request",
                   "jsonName": null,
-                  "type": "System.String",
-                  "typeSimple": "string",
+                  "type": "Bepixplore.Cities.CitySearchRequestDto",
+                  "typeSimple": "Bepixplore.Cities.CitySearchRequestDto",
                   "isOptional": false,
                   "defaultValue": null,
                   "constraintTypes": null,
-                  "bindingSourceId": "ModelBinding",
+                  "bindingSourceId": "Body",
                   "descriptorName": ""
                 }
               ],
               "returnValue": {
-                "type": "Bepixplore.Users.PublicUserProfileDto",
-                "typeSimple": "Bepixplore.Users.PublicUserProfileDto"
+                "type": "Bepixplore.Cities.CitySearchResultDto",
+                "typeSimple": "Bepixplore.Cities.CitySearchResultDto"
               },
               "allowAnonymous": null,
-              "implementFrom": "Bepixplore.Users.IUserAppService"
-            },
-            "DeleteMyAccountAsync": {
-              "uniqueName": "DeleteMyAccountAsync",
-              "name": "DeleteMyAccountAsync",
-              "httpMethod": "DELETE",
-              "url": "api/app/user/my-account",
-              "supportedVersions": [],
-              "parametersOnMethod": [],
-              "parameters": [],
-              "returnValue": {
-                "type": "System.Void",
-                "typeSimple": "System.Void"
-              },
-              "allowAnonymous": null,
-              "implementFrom": "Bepixplore.Users.IUserAppService"
+              "implementFrom": "Bepixplore.Cities.ICitySearchService"
             }
           }
-        }
-      }
-    },
-    "featureManagement": {
-      "rootPath": "featureManagement",
-      "remoteServiceName": "AbpFeatureManagement",
-      "controllers": {
-        "Volo.Abp.FeatureManagement.FeaturesController": {
-          "controllerName": "Features",
-          "controllerGroupName": "Features",
+        },
+        "Bepixplore.Favorites.FavoriteAppService": {
+          "controllerName": "Favorite",
+          "controllerGroupName": "Favorite",
           "isRemoteService": true,
           "isIntegrationService": false,
           "apiVersion": null,
@@ -1760,7 +1728,7 @@
                   }
                 },
                 {
-                  "name": "RemoveAsync",
+                  "name": "DeleteAsync",
                   "parametersOnMethod": [
                     {
                       "name": "destinationId",
@@ -1825,9 +1793,9 @@
               "allowAnonymous": null,
               "implementFrom": "Bepixplore.Favorites.IFavoriteAppService"
             },
-            "RemoveAsyncByDestinationId": {
-              "uniqueName": "RemoveAsyncByDestinationId",
-              "name": "RemoveAsync",
+            "DeleteAsyncByDestinationId": {
+              "uniqueName": "DeleteAsyncByDestinationId",
+              "name": "DeleteAsync",
               "httpMethod": "DELETE",
               "url": "api/app/favorite",
               "supportedVersions": [],
@@ -2002,8 +1970,8 @@
                     }
                   ],
                   "returnValue": {
-                    "type": "System.Collections.Generic.List<Bepixplore.Ratings.RatingDto>",
-                    "typeSimple": "[Bepixplore.Ratings.RatingDto]"
+                    "type": "Volo.Abp.Application.Dtos.PagedResultDto<Bepixplore.Ratings.RatingDto>",
+                    "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Bepixplore.Ratings.RatingDto>"
                   }
                 },
                 {
@@ -2212,8 +2180,8 @@
                 }
               ],
               "returnValue": {
-                "type": "System.Collections.Generic.List<Bepixplore.Ratings.RatingDto>",
-                "typeSimple": "[Bepixplore.Ratings.RatingDto]"
+                "type": "Volo.Abp.Application.Dtos.PagedResultDto<Bepixplore.Ratings.RatingDto>",
+                "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Bepixplore.Ratings.RatingDto>"
               },
               "allowAnonymous": false,
               "implementFrom": "Bepixplore.Ratings.IRatingAppService"
@@ -2470,6 +2438,101 @@
               },
               "allowAnonymous": false,
               "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<Bepixplore.Ratings.RatingDto,Bepixplore.Ratings.RatingDto,System.Guid,Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto>"
+            }
+          }
+        },
+        "Bepixplore.Users.UserAppService": {
+          "controllerName": "User",
+          "controllerGroupName": "User",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "Bepixplore.Users.UserAppService",
+          "interfaces": [
+            {
+              "type": "Bepixplore.Users.IUserAppService",
+              "name": "IUserAppService",
+              "methods": [
+                {
+                  "name": "GetPublicProfileAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "userName",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Bepixplore.Users.PublicUserProfileDto",
+                    "typeSimple": "Bepixplore.Users.PublicUserProfileDto"
+                  }
+                },
+                {
+                  "name": "DeleteMyAccountAsync",
+                  "parametersOnMethod": [],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "GetPublicProfileAsyncByUserName": {
+              "uniqueName": "GetPublicProfileAsyncByUserName",
+              "name": "GetPublicProfileAsync",
+              "httpMethod": "GET",
+              "url": "api/app/user/public-profile",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "userName",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "userName",
+                  "name": "userName",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Bepixplore.Users.PublicUserProfileDto",
+                "typeSimple": "Bepixplore.Users.PublicUserProfileDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Bepixplore.Users.IUserAppService"
+            },
+            "DeleteMyAccountAsync": {
+              "uniqueName": "DeleteMyAccountAsync",
+              "name": "DeleteMyAccountAsync",
+              "httpMethod": "DELETE",
+              "url": "api/app/user/my-account",
+              "supportedVersions": [],
+              "parametersOnMethod": [],
+              "parameters": [],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Bepixplore.Users.IUserAppService"
             }
           }
         },
@@ -5332,6 +5395,18 @@
           "jsonName": null,
           "type": "System.Int32?",
           "typeSimple": "number?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "IsPopularFilter",
+          "jsonName": null,
+          "type": "System.Boolean",
+          "typeSimple": "boolean",
           "isRequired": false,
           "minLength": null,
           "maxLength": null,

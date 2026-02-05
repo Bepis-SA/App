@@ -5,25 +5,24 @@ import { ThemeSharedModule } from '@abp/ng.theme.shared';
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { FavoriteService } from '../proxy/favorites/favorite.service';
-import { DestinationDto } from '../proxy/application/contracts/destinations/models';
 import { ToasterService, ConfirmationService, Confirmation } from '@abp/ng.theme.shared';
 
 @Component({
-  selector: 'app-destinations',
+  selector: 'app-favorites',
   standalone: true,
   imports: [CommonModule, CoreModule, ThemeSharedModule],
   providers: [ListService],
-  templateUrl: './destinations.html',
-  styleUrl: './destinations.scss'
+  templateUrl: './favorites.component.html',
+  styleUrl: './favorites.component.scss'
 })
-export class Destinations implements OnInit {
+export class FavoritesComponent implements OnInit {
   public readonly list = inject(ListService);
   private readonly favoriteService = inject(FavoriteService);
   private readonly toaster = inject(ToasterService);
   private readonly confirmation = inject(ConfirmationService);
   private readonly router = inject(Router);
 
-  items: DestinationDto[] = [];
+  items: any[] = [];
   totalCount = 0;
 
   ngOnInit() {
@@ -49,7 +48,13 @@ export class Destinations implements OnInit {
   }
 
   viewDetails(item: any) {
-    this.router.navigate(['/destinations/details', item.id]);
+    const id = item.id || item.destinationId;
+
+    if (id) {
+      this.router.navigate(['/favorites/details', id], { state: { data: item } });
+    } else {
+      this.toaster.warn('No se encontró el ID del destino.');
+    }
   }
 
   delete(id: string) {
@@ -62,7 +67,7 @@ export class Destinations implements OnInit {
       } as Partial<Confirmation.Options>
     ).subscribe((status: Confirmation.Status) => {
       if (status === Confirmation.Status.confirm) {
-        this.favoriteService.remove(id).subscribe({
+        this.favoriteService.delete(id).subscribe({
           next: () => {
             this.loadFavorites();
 

@@ -19,6 +19,15 @@ export class FavoriteService {
     { apiName: this.apiName,...config });
   
 
+  delete = (destinationId: string, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, void>({
+      method: 'DELETE',
+      url: '/api/app/favorite',
+      params: { destinationId },
+    },
+    { apiName: this.apiName,...config });
+  
+
   getList = (config?: Partial<Rest.Config>) =>
     this.restService.request<any, DestinationDto[]>({
       method: 'GET',
@@ -32,15 +41,6 @@ export class FavoriteService {
       method: 'POST',
       url: '/api/app/favorite/is-favorite',
       params: { name, country },
-    },
-    { apiName: this.apiName,...config });
-  
-
-  remove = (destinationId: string, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, void>({
-      method: 'DELETE',
-      url: '/api/app/favorite',
-      params: { destinationId },
     },
     { apiName: this.apiName,...config });
 }

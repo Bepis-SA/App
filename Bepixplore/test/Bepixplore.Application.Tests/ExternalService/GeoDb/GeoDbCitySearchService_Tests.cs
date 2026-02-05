@@ -1,5 +1,7 @@
 ﻿using Bepixplore.Cities;
+using Bepixplore.Destinations;
 using Bepixplore.External.GeoDb;
+using Bepixplore.Favorites;
 using Bepixplore.Metrics;
 using NSubstitute;
 using Shouldly;
@@ -10,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Guids;
+using Volo.Abp.Linq;
 using Volo.Abp.Modularity;
 using Xunit;
 
@@ -37,7 +40,7 @@ namespace Bepixplore.ExternalServices.GeoDb
         public async Task SearchCitiesAsync_Should_Return_Real_Cities_And_Map_Correctly()
         {
             // Arrange
-            var request = new CitySearchRequestDto { PartialName = "Cordo" };
+            var request = new CitySearchRequestDto { PartialName = "Córdo" };
 
             // Act
             var result = await _citySearchService.SearchCitiesAsync(request);
@@ -92,16 +95,23 @@ namespace Bepixplore.ExternalServices.GeoDb
             // Arrange
             var failingHttpClient = new HttpClient(new FailingHandler());
 
+            var asyncExecuterMock = Substitute.For<IAsyncQueryableExecuter>();
+            var destinationRepoMock = Substitute.For<IRepository<Destination, Guid>>();
+            var favoriteRepoMock = Substitute.For<IRepository<Favorite, Guid>>();
+
             var apiMetricRepositoryMock = Substitute.For<IRepository<ApiMetric, Guid>>();
             var guidGeneratorMock = Substitute.For<IGuidGenerator>();
 
             var service = new GeoDbCitySearchService(
+                asyncExecuterMock,
+                destinationRepoMock,
+                favoriteRepoMock,
                 failingHttpClient,
                 apiMetricRepositoryMock,
                 guidGeneratorMock
             );
 
-            var request = new CitySearchRequestDto { PartialName = "Cor" };
+            var request = new CitySearchRequestDto { PartialName = "Cor", IsPopularFilter = false };
 
             // Act
             var result = await service.SearchCitiesAsync(request);
@@ -171,8 +181,7 @@ namespace Bepixplore.ExternalServices.GeoDb
 
             tokyo.ShouldNotBeNull();
             tokyo.Country.ShouldNotBeNullOrWhiteSpace();
-
-            tokyo.Latitude.ShouldBeInRange(20.0f, 45.0f); 
+            tokyo.Latitude.ShouldBeInRange(20.0f, 45.0f);
             tokyo.Longitude.ShouldBeInRange(120.0f, 150.0f);
         }
 

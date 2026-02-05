@@ -2,8 +2,6 @@
 using Bepixplore.Destinations;
 using Shouldly;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Modularity;
@@ -81,7 +79,7 @@ public abstract class FavoriteAppService_Tests<TStartupModule> : BepixploreAppli
     }
 
     [Fact]
-    public async Task RemoveAsync_Should_Delete_Favorite_Link()
+    public async Task DeleteAsync_Should_Delete_Favorite_Link()
     {
         // Arrange
         var myId = _currentUser.GetId();
@@ -94,7 +92,7 @@ public abstract class FavoriteAppService_Tests<TStartupModule> : BepixploreAppli
         });
 
         // Act
-        await _favoriteAppService.RemoveAsync(destId);
+        await _favoriteAppService.DeleteAsync(destId);
 
         // Assert
         await WithUnitOfWorkAsync(async () =>

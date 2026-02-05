@@ -1,6 +1,5 @@
 ﻿using Bepixplore.Destinations;
 using Bepixplore.Ratings;
-using NSubstitute;
 using Shouldly;
 using System;
 using System.Security.Claims;
