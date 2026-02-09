@@ -1,0 +1,22 @@
+{
+  "Menu": {
+    "Home": "Inicio",
+    "Cities": "Destinos Turísticos"
+  },
+  "Cities": {
+    "SearchQuery": "Búsqueda",
+    "SearchPlaceholder": "Buscar destinos...",
+    "Country": "País",
+    "CountryPlaceholder": "Filtrar por país...",
+    "Population": "Población",
+    "Coordinates": "Coordenadas",
+    "ViewOnMap": "Ver en mapa",
+    "NoResults": "No se encontraron resultados",
+    "NoResultsMessage": "Intenta modificar los criterios de búsqueda o limpia los filtros para ver todos los destinos.",
+    "ShowAll": "Mostrar todos"
+  },
+  "Search": "Buscar",
+  "Clear": "Limpiar",
+  "Loading": "Cargando...",
+  "::Menu:Cities": "Ciudades"
+}

@@ -1,0 +1,28 @@
+﻿{
+  "applications": {
+    "Bepixplore.HttpApi.Host": {
+      "type": "dotnet-project",
+      "launchUrl": "https://localhost:44366",
+      "path": "../../../src/Bepixplore.HttpApi.Host/Bepixplore.HttpApi.Host.csproj",
+      "kubernetesService": ".*-httpapihost$",
+      "healthCheckEndpoint": "/health-status",
+      "healthUiEndpoint": "/health-ui",
+      "execution": {
+        "order": 4
+      }
+    },
+    "Bepixplore.Angular": {
+      "type": "cli",
+      "workingDirectory": "../../../angular",
+      "startCommand": "./start.ps1",
+      "launchUrl": "http://localhost:4200",
+      "kubernetesService": ".*-angular$",
+      "execution": {
+        "order": 2
+      }    
+    }
+  },
+  "containers": {
+    "serviceName": "Bepixplore-Containers",
+  }
+}
